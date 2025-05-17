@@ -42,10 +42,15 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
+    class MessageRole(models.IntegerChoices):
+        SYSTEM = 1, 'System'
+        ASSISTANT = 2, 'Assistant'
+        USER = 3, 'User'
+
     chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message_id = models.AutoField(primary_key=True) # incremental
     message_text = models.TextField(max_length=4096)
-    message_role = models.IntegerChoices('System', 'Assistant', 'User')
+    message_role = models.IntegerField(choices=MessageRole.choices, default=MessageRole.USER)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
