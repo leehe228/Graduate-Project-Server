@@ -28,3 +28,26 @@ class File(models.Model):
     
     def __str__(self):
         return self.file_path
+
+
+class Chat(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    chat_id = models.AutoField(primary_key=True) # incremental
+    chat_title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.chat_title
+
+
+class Message(models.Model):
+    chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    message_id = models.AutoField(primary_key=True) # incremental
+    message_text = models.TextField(max_length=4096)
+    message_role = models.IntegerChoices('System', 'Assistant', 'User')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.message_text
