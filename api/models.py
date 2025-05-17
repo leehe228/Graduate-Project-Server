@@ -14,3 +14,17 @@ class User(models.Model):
     
     def __str__(self):
         return self.user_id
+
+
+class File(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    file_id = models.AutoField(primary_key=True) # incremental
+    file_name = models.CharField(max_length=255)
+    file_size = models.IntegerField()
+    file_type = models.CharField(max_length=32)
+    file_path = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.file_path
