@@ -3,13 +3,24 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 
+from .utils import file_to_sqlite, execute_sqlite_query, run_pyplot_code
+from .backend import langchain, text2sql
 from .models import User, File, Chat, Message
 
+import threading
 import json
 import os
 import uuid
+import time
+
+from langchain_openai.chat_models import ChatOpenAI
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+
+model = ChatOpenAI(
+    model="gpt-4o-2024-08-06",
+    temperature=0.0,
+)
 
 # Create your views here.
 
@@ -185,6 +196,30 @@ def get_user(request):
             "data": None
         })
 
+def _background_file_processing(file_id: int):
+    start_time = time.time()
+    file = File.objects.get(file_id=file_id)
+    file_path = file.file_path
+    
+    base, _ = os.path.splitext(file_path)
+    dest = f"{base}.db"
+    
+    db_path, schema_text = file_to_sqlite(
+        file_path=file_path,
+        db_path=dest,
+        table_name=file.file_name,
+        if_exists='replace',
+        chunksize=1000
+    )
+    
+    file.file_sqlpath = db_path
+    file.file_schema = schema_text
+    file.file_processed = True
+    file.save()
+    
+    end_time = time.time()
+    print(f"File processing completed in {end_time - start_time:.2f} seconds")
+
 @csrf_exempt
 def upload_file(request):
     if request.method == 'POST':
@@ -196,6 +231,14 @@ def upload_file(request):
             return JsonResponse({
                 "response": 400,
                 "message": "missing required fields",
+                "data": None
+            })
+            
+        # 파일이 csv, xls, xlsx 확장자인지 확인
+        if not (file.name.endswith('.csv') or file.name.endswith('.xls') or file.name.endswith('.xlsx')):
+            return JsonResponse({
+                "response": 415,
+                "message": "unsupported file type",
                 "data": None
             })
             
@@ -248,6 +291,13 @@ def upload_file(request):
         # File 객체 저장
         file_obj.save()
         
+        # 파일 처리 스레드 시작
+        threading.Thread(
+            target=_background_file_processing,
+            args=(file_obj.file_id,),
+            daemon=True
+        ).start()
+        
         # 파일 업로드 성공
         return JsonResponse({
             "response": 200,
@@ -298,6 +348,7 @@ def list_files(request):
                 "file_size_kb": file.file_size // 1024,
                 "file_type": file.file_type,
                 "file_path": file.file_path,
+                'file_processed': file.file_processed,
                 "created_at": file.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             }
             file_list.append(file_data)
@@ -346,6 +397,12 @@ def delete_file(request):
                 os.remove(file.file_path)
         except Exception as e:
             print(f"Error deleting file: {e}")
+            
+        try:
+            if os.path.exists(file.file_sqlpath):
+                os.remove(file.file_sqlpath)
+        except Exception as e:
+            print(f"Error deleting SQL file: {e}")
             
         # File 객체 삭제
         file.delete()

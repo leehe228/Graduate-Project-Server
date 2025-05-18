@@ -23,6 +23,9 @@ class File(models.Model):
     file_size = models.IntegerField()
     file_type = models.CharField(max_length=32)
     file_path = models.CharField(max_length=255)
+    file_sqlpath = models.CharField(default="", max_length=255)
+    file_schema = models.TextField(default="")
+    file_processed = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
