@@ -6,6 +6,10 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import User, File, Chat, Message
 
 import json
+import os
+import uuid
+
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Create your views here.
 
@@ -172,6 +176,186 @@ def get_user(request):
                 "message": "user id is not found",
                 "data": None
             })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
+
+@csrf_exempt
+def upload_file(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        file = request.FILES.get('file')
+        
+        # 값이 비어있다면 400 오류
+        if not user_id or not file or user_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # 파일 크기 확인
+        if file.size > MAX_FILE_SIZE:
+            return JsonResponse({
+                "response": 413,
+                "message": "file is too large",
+                "data": None
+            })
+            
+        # user id 존재하는지 확인
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "user id is not found",
+                "data": None
+            })
+            
+        # 파일 저장 경로 설정
+        # 파일 경로는 /files/{user_id}/{file_id}.{확장자} 형식으로 저장
+        file_path = os.path.join('static/files', user_id)
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+            
+        # 파일 이름 설정
+        original_file_name = file.name
+        file_extension = original_file_name.split('.')[-1]
+        file_id = str(uuid.uuid4())
+        file_name = f"{file_id}.{file_extension}"
+        file_path = os.path.join(file_path, file_name)
+        
+        # 파일 저장
+        with open(file_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        print(f"File saved at {file_path}")
+                
+        # File 객체 생성
+        file_obj = File(
+            user_id=user,
+            file_name=original_file_name,
+            file_path=file_path,
+            file_size=file.size,
+            file_type=file_extension,
+        )
+        
+        # File 객체 저장
+        file_obj.save()
+        
+        # 파일 업로드 성공
+        return JsonResponse({
+            "response": 200,
+            "message": "file upload success",
+            "data": None
+        })
+    
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
+
+@csrf_exempt
+def list_files(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        
+        # 값이 비어있다면 400 오류
+        if not user_id or user_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # user id 존재하는지 확인
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "user id is not found",
+                "data": None
+            })
+            
+        # File 객체 가져오기
+        files = File.objects.filter(user_id=user)
+        
+        # File 객체를 JSON 형태로 변환
+        file_list = []
+        for file in files:
+            file_data = {
+                "file_id": file.file_id,
+                "file_name": file.file_name,
+                "file_size_kb": file.file_size // 1024,
+                "file_type": file.file_type,
+                "file_path": file.file_path,
+                "created_at": file.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            file_list.append(file_data)
+        
+        # 성공적으로 가져온 경우
+        return JsonResponse({
+            "response": 200,
+            "message": "request success",
+            "data": file_list
+        })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
+
+@csrf_exempt
+def delete_file(request):
+    if request.method == 'DELETE':
+        file_id = request.GET.get('file_id')
+        
+        # 값이 비어있다면 400 오류
+        if not file_id or file_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # File 객체 가져오기
+        try:
+            file = File.objects.get(file_id=file_id)
+        except File.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "file id is not found",
+                "data": None
+            })
+            
+        # 실제 파일 삭제
+        try:
+            if os.path.exists(file.file_path):
+                os.remove(file.file_path)
+        except Exception as e:
+            print(f"Error deleting file: {e}")
+            
+        # File 객체 삭제
+        file.delete()
+        
+        # 파일 삭제 성공
+        return JsonResponse({
+            "response": 200,
+            "message": "file delete success",
+            "data": None
+        })
         
     else:
         # 잘못된 요청
