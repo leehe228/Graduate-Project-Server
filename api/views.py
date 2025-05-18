@@ -7,6 +7,7 @@ from .models import User, File, Chat, Message
 
 import json
 import os
+import uuid
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
@@ -223,9 +224,9 @@ def upload_file(request):
             os.makedirs(file_path)
             
         # 파일 이름 설정
-        file_name = file.name
-        file_extension = file_name.split('.')[-1]
-        file_id = str(int(File.objects.filter(user_id=user_id).count()) + 1)
+        original_file_name = file.name
+        file_extension = original_file_name.split('.')[-1]
+        file_id = str(uuid.uuid4())
         file_name = f"{file_id}.{file_extension}"
         file_path = os.path.join(file_path, file_name)
         
@@ -238,10 +239,10 @@ def upload_file(request):
         # File 객체 생성
         file_obj = File(
             user_id=user,
-            file_name=file_name,
+            file_name=original_file_name,
             file_path=file_path,
             file_size=file.size,
-            file_type=file.name.split('.')[-1],
+            file_type=file_extension,
         )
         
         # File 객체 저장
