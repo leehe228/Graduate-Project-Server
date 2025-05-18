@@ -9,6 +9,9 @@ matplotlib.use("Agg")   # non-interactive backend
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
+
 def file_to_sqlite(
     file_path: str | Path,
     db_path: str | Path,
@@ -135,3 +138,31 @@ def run_pyplot_code(
     except Exception as e:
         print(f"[run_pyplot_code] Error: {e}")
         return None
+
+# (1) generic relative date
+def get_date(year_diff: int = 0,
+             month_diff: int = 0,
+             week_diff: int = 0,
+             day_diff: int = 0,
+             weekday: int = 0) -> str:
+    """
+    Return ISO-8601 date computed from today() ± diffs.
+    weekday: Sun=1 … Sat=7 ; 0 ⇒ keep current weekday.
+    """
+    d = date.today() + relativedelta(years=year_diff,
+                                     months=month_diff,
+                                     weeks=week_diff,
+                                     days=day_diff)
+    if weekday:
+        # iso: Mon=1 … Sun=7  ➜ convert “Sun=1” scale to iso
+        target_iso = (weekday + 5) % 7 + 1
+        delta = target_iso - d.isoweekday()
+        d += timedelta(days=delta)
+    return d.isoformat()
+
+# (2) week-relative shortcut
+def get_weekdate(week_diff: int = 0, weekday: int = 0) -> str:
+    """
+    Return a date in another week (week_diff=-1 ⇒ last week).
+    """
+    return get_date(week_diff=week_diff, weekday=weekday)
