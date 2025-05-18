@@ -1,7 +1,11 @@
 from pathlib import Path
 import sqlite3
 import pandas as pd
+import types
 from typing import Optional, Tuple, List, Union
+
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 def file_to_sqlite(
     file_path: str | Path,
@@ -108,3 +112,39 @@ def execute_sqlite_query(
 
         conn.commit()
         return cur.rowcount
+
+def run_pyplot_code(
+    code: str,
+    save_path: Optional[str] | Optional[Path] = None,
+) -> Figure:
+    """
+    Execute a string of Python code that generates a matplotlib plot.
+
+    Args:
+        code: A string containing Python code to execute.
+
+    Returns:
+        A matplotlib Figure object.
+    """
+    try:
+        plt.close("all")
+        
+        exec_globals: dict = {"plt": plt}
+        exec_locals: dict = {}
+        
+        exec(code, exec_globals, exec_locals)
+        
+        fig: Figure = plt.gcf()
+        
+        if save_path:
+            save_path = Path(save_path)
+            if not save_path.parent.exists():
+                save_path.parent.mkdir(parents=True, exist_ok=True)
+            fig.savefig(save_path, bbox_inches="tight")
+            print(f"Figure saved to {save_path}")
+        
+        return fig
+    
+    except Exception as e:
+        print(f"Error executing code: {e}")
+        return None

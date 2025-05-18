@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 
-from .utils import file_to_sqlite, execute_sqlite_query
+from .utils import file_to_sqlite, execute_sqlite_query, run_pyplot_code
 from .backend import langchain, text2sql
 from .models import User, File, Chat, Message
 
