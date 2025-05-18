@@ -49,6 +49,7 @@ class Message(models.Model):
         SYSTEM = 1, 'System'
         ASSISTANT = 2, 'Assistant'
         USER = 3, 'User'
+        INTERNAL = 4, 'Internal'
 
     chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message_id = models.AutoField(primary_key=True) # incremental
