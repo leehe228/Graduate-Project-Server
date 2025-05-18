@@ -315,3 +315,48 @@ def list_files(request):
             "message": "method not allowed",
             "data": None
         })
+
+@csrf_exempt
+def delete_file(request):
+    if request.method == 'DELETE':
+        file_id = request.GET.get('file_id')
+        
+        # 값이 비어있다면 400 오류
+        if not file_id or file_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # File 객체 가져오기
+        try:
+            file = File.objects.get(file_id=file_id)
+        except File.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "file id is not found",
+                "data": None
+            })
+            
+        # 실제 파일 삭제
+        if os.path.exists(file.file_path):
+            os.remove(file.file_path)
+            
+        # File 객체 삭제
+        file.delete()
+        
+        # 파일 삭제 성공
+        return JsonResponse({
+            "response": 200,
+            "message": "file delete success",
+            "data": None
+        })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
