@@ -13,7 +13,7 @@ import json
 def health_check(request):
     return JsonResponse({
         "response": 200,
-        "message": "server connection sucess",
+        "message": "server connection success",
         "data": None
     })
 
@@ -90,8 +90,6 @@ def login(request):
         body = json.loads(request.body)
         user_id = body.get('user_id')
         user_password = body.get('user_password')
-        
-        print(user_id, user_password)
         
         # 값이 비어있다면 400 오류
         if not user_id or not user_password or user_id == "" or user_password == "":
