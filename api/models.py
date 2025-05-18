@@ -56,7 +56,7 @@ class Message(models.Model):
     message_id = models.AutoField(primary_key=True) # incremental
     message_text = models.TextField(max_length=4096)
     message_role = models.IntegerField(choices=MessageRole.choices, default=MessageRole.USER)
-    message_image_url = models.CharField(max_length=255, default="")
+    message_image_url = models.CharField(max_length=255, null=True, blank=True, default=None)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
