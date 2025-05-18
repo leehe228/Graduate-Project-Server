@@ -135,3 +135,51 @@ def login(request):
             "message": "method not allowed",
             "data": None
         })
+
+@csrf_exempt
+def get_user(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        
+        # 값이 비어있다면 400 오류
+        if not user_id or user_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # User 객체 가져오기
+        try:
+            user = User.objects.get(user_id=user_id)
+            
+            # User 객체를 JSON 형태로 변환
+            user_data = {
+                "user_id": user.user_id,
+                "user_email": user.user_email,
+                "user_name": user.user_name,
+                "user_category": user.user_category,
+                "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            
+            # 성공적으로 가져온 경우
+            return JsonResponse({
+                "response": 200,
+                "message": "request success",
+                "data": user_data
+            })
+            
+        except User.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "user id is not found",
+                "data": None
+            })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
