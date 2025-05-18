@@ -83,3 +83,55 @@ def register(request):
             "message": "method not allowed",
             "data": None
         })
+
+@csrf_exempt
+def login(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        user_id = body.get('user_id')
+        user_password = body.get('user_password')
+        
+        print(user_id, user_password)
+        
+        # 값이 비어있다면 400 오류
+        if not user_id or not user_password or user_id == "" or user_password == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # 로그인 
+        try:
+            user = User.objects.get(user_id=user_id)
+            
+            # 비밀번호 확인
+            if check_password(user_password, user.user_password):
+                # 로그인 성공
+                return JsonResponse({
+                    "response": 200,
+                    "message": "login success",
+                    "data": None
+                })
+            else:
+                # 비밀번호 불일치
+                return JsonResponse({
+                    "response": 401,
+                    "message": "invalid user id or password",
+                    "data": None
+                })
+            
+        except User.DoesNotExist:
+            return JsonResponse({
+                "response": 401,
+                "message": "invalid user id or password",
+                "data": None
+            })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
