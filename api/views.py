@@ -240,7 +240,8 @@ def upload_file(request):
             user_id=user,
             file_name=file_name,
             file_path=file_path,
-            file_size=file.size
+            file_size=file.size,
+            file_type=file.name.split('.')[-1],
         )
         
         # File 객체 저장
