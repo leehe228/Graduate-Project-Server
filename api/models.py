@@ -39,6 +39,7 @@ class Chat(models.Model):
     chat_title = models.CharField(default="", max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    file_id = models.ForeignKey(File, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return self.chat_title
@@ -55,6 +56,7 @@ class Message(models.Model):
     message_id = models.AutoField(primary_key=True) # incremental
     message_text = models.TextField(max_length=4096)
     message_role = models.IntegerField(choices=MessageRole.choices, default=MessageRole.USER)
+    message_image_url = models.CharField(max_length=255, default="")
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
