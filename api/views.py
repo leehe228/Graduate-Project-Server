@@ -261,3 +261,57 @@ def upload_file(request):
             "message": "method not allowed",
             "data": None
         })
+
+@csrf_exempt
+def list_files(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        
+        # 값이 비어있다면 400 오류
+        if not user_id or user_id == "":
+            return JsonResponse({
+                "response": 400,
+                "message": "missing required fields",
+                "data": None
+            })
+            
+        # user id 존재하는지 확인
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({
+                "response": 404,
+                "message": "user id is not found",
+                "data": None
+            })
+            
+        # File 객체 가져오기
+        files = File.objects.filter(user_id=user)
+        
+        # File 객체를 JSON 형태로 변환
+        file_list = []
+        for file in files:
+            file_data = {
+                "file_id": file.file_id,
+                "file_name": file.file_name,
+                "file_size_kb": file.file_size // 1024,
+                "file_type": file.file_type,
+                "file_path": file.file_path,
+                "created_at": file.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            file_list.append(file_data)
+        
+        # 성공적으로 가져온 경우
+        return JsonResponse({
+            "response": 200,
+            "message": "request success",
+            "data": file_list
+        })
+        
+    else:
+        # 잘못된 요청
+        return JsonResponse({
+            "response": 405,
+            "message": "method not allowed",
+            "data": None
+        })
