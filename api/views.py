@@ -12,7 +12,14 @@ import os
 import uuid
 import time
 
+from langchain_openai.chat_models import ChatOpenAI
+
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+
+model = ChatOpenAI(
+    model="gpt-4o-2024-08-06",
+    temperature=0.0,
+)
 
 # Create your views here.
 
