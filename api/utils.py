@@ -116,7 +116,7 @@ def execute_sqlite_query(
 def run_pyplot_code(
     code: str,
     save_path: Optional[str] | Optional[Path] = None,
-) -> Figure:
+) -> Optional[Figure]:
     """
     Execute a string of Python code that generates a matplotlib plot.
 
