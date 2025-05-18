@@ -341,8 +341,11 @@ def delete_file(request):
             })
             
         # 실제 파일 삭제
-        if os.path.exists(file.file_path):
-            os.remove(file.file_path)
+        try:
+            if os.path.exists(file.file_path):
+                os.remove(file.file_path)
+        except Exception as e:
+            print(f"Error deleting file: {e}")
             
         # File 객체 삭제
         file.delete()
