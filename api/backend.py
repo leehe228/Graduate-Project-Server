@@ -194,6 +194,7 @@ def make_title(
         "You are a title generator. "
         "Generate a concise title for the following message content."
         f"Max length of title is {max_length} characters."
+        "Make a title in Korean."
     )
     
     messages = [
