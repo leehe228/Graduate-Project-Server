@@ -91,3 +91,38 @@ def text2sql(
     if match:
         return match.group(1).strip()
     return content.strip()
+
+def make_title(
+    model: ChatOpenAI,
+    message: str,
+    max_length: int = 32
+) -> str:
+    """
+    Generate a title for the chat based on the message content.
+    Args:
+        message:     The message content to generate a title from.
+        max_length:  The maximum length of the title.
+    Returns:
+        A string representing the generated title, truncated to max_length if necessary.
+    """
+    
+    system_prompt = (
+        "You are a title generator. "
+        "Generate a concise title for the following message content."
+        f"Max length of title is {max_length} characters."
+    )
+    
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=(
+            "Generate a title for the following message:\n"
+            f"Message: {message}\n"
+        ))
+    ]
+    
+    response = model.invoke(messages)
+    content = response.content.strip()
+    if len(content) > max_length:
+        content = content[:max_length]
+        
+    return content
