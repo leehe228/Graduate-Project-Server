@@ -630,7 +630,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text="\n".join(internal_log),
                                    message_role=Message.MessageRole.INTERNAL,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         # ── [PLOT] 분기 ─────────────────────────────────────
@@ -654,7 +654,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text="\n".join(internal_log),
                                    message_role=Message.MessageRole.INTERNAL,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         # ── <ASK_USER> 즉시 반환 ────────────────────────────
@@ -663,7 +663,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=assistant_reply,
                                    message_role=Message.MessageRole.ASSISTANT,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             need_more = False
             break
 
@@ -673,14 +673,14 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=assistant_reply,
                                    message_role=Message.MessageRole.ASSISTANT,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         assistant_final = assistant_reply.replace("<END>", "").strip()
         Message.objects.create(chat_id=chat,
                                message_text=assistant_final,
                                message_role=Message.MessageRole.ASSISTANT,
-                               message_image_url=str(image_url) or "")
+                               message_image_url=image_url)
         need_more = False
 
     # 4) 자동 종료 알림
@@ -796,7 +796,7 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=f"[INTERNAL] SQL\n{sql_query}\n{preview}",
                                    message_role=Message.MessageRole.INTERNAL,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         if assistant_reply.startswith("[PLOT]"):
@@ -816,7 +816,7 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=f"[INTERNAL] Plot saved → {image_url}",
                                    message_role=Message.MessageRole.INTERNAL,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         if assistant_reply.rstrip().endswith("<ASK_USER>"):
@@ -824,7 +824,7 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=assistant_reply,
                                    message_role=Message.MessageRole.ASSISTANT,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             need_more = False
             break
 
@@ -833,14 +833,14 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             Message.objects.create(chat_id=chat,
                                    message_text=assistant_reply,
                                    message_role=Message.MessageRole.ASSISTANT,
-                                   message_image_url=str(image_url) or "")
+                                   message_image_url=image_url)
             continue
 
         assistant_final = assistant_reply.replace("<END>", "").strip()
         Message.objects.create(chat_id=chat,
                                message_text=assistant_final,
                                message_role=Message.MessageRole.ASSISTANT,
-                               message_image_url=str(image_url) or "")
+                               message_image_url=image_url)
         need_more = False
 
     if turn >= MAX_ITER and need_more:
