@@ -36,9 +36,10 @@ class File(models.Model):
 class Chat(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     chat_id = models.AutoField(primary_key=True) # incremental
-    chat_title = models.CharField(max_length=255)
+    chat_title = models.CharField(default="", max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    file_id = models.ForeignKey(File, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return self.chat_title
@@ -49,11 +50,13 @@ class Message(models.Model):
         SYSTEM = 1, 'System'
         ASSISTANT = 2, 'Assistant'
         USER = 3, 'User'
+        INTERNAL = 4, 'Internal'
 
     chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message_id = models.AutoField(primary_key=True) # incremental
     message_text = models.TextField(max_length=4096)
     message_role = models.IntegerField(choices=MessageRole.choices, default=MessageRole.USER)
+    message_image_url = models.CharField(max_length=255, null=True, blank=True, default=None)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
