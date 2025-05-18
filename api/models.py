@@ -36,7 +36,7 @@ class File(models.Model):
 class Chat(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     chat_id = models.AutoField(primary_key=True) # incremental
-    chat_title = models.CharField(max_length=255)
+    chat_title = models.CharField(default="", max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
