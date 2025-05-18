@@ -31,8 +31,7 @@ def register(request):
             user_category = 0
         
         # 값이 비어있다면 400 오류
-        if not user_id or not user_email or not user_password or not user_name \
-            or user_id == "" or user_email == "" or user_password == "" or user_name == "":
+        if not (user_id and user_email and user_password and user_name):
             return JsonResponse({
                 "response": 400,
                 "message": "missing required fields",
