@@ -17,6 +17,12 @@ class User(models.Model):
 
 
 class File(models.Model):
+    class FileProcessingStatus(models.IntegerChoices):
+        PENDING = 1, 'Pending'
+        PROCESSING = 2, 'Processing'
+        COMPLETED = 3, 'Completed'
+        FAILED = 4, 'Failed'
+
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     file_id = models.AutoField(primary_key=True) # incremental
     file_name = models.CharField(max_length=255)
@@ -25,7 +31,8 @@ class File(models.Model):
     file_path = models.CharField(max_length=255)
     file_sqlpath = models.CharField(default="", max_length=255)
     file_schema = models.TextField(default="")
-    file_processed = models.BooleanField(default=False)
+    file_processed = models.IntegerField(choices=FileProcessingStatus.choices, default=FileProcessingStatus.PENDING)
+    file_error = models.TextField(default="")
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     

@@ -290,27 +290,45 @@ def get_user(request):
         })
 
 def _background_file_processing(file_id: int):
-    start_time = time.time()
-    file = File.objects.get(file_id=file_id)
-    file_path = file.file_path
-    
-    base, _ = os.path.splitext(file_path)
-    dest = f"{base}.db"
-    
-    db_path, schema_text = file_to_sqlite(
-        file_path=file_path,
-        db_path=dest,
-        if_exists='replace',
-        chunksize=1000
-    )
-    
-    file.file_sqlpath = db_path
-    file.file_schema = schema_text
-    file.file_processed = True
-    file.save()
-    
-    end_time = time.time()
-    print(f"File processing completed in {end_time - start_time:.2f} seconds")
+    try:
+        start_time = time.time()
+        file = File.objects.get(file_id=file_id)
+        file_path = file.file_path
+        
+        file.file_processed = file.FileProcessingStatus.PROCESSING
+        file.save()
+        
+        base, _ = os.path.splitext(file_path)
+        dest = f"{base}.db"
+        
+        db_path, schema_text = file_to_sqlite(
+            file_path=file_path,
+            db_path=dest,
+            if_exists='replace',
+            chunksize=1000
+        )
+        
+        file.file_sqlpath = db_path
+        file.file_schema = schema_text
+        file.file_processed = file.FileProcessingStatus.COMPLETED
+        file.save()
+        
+        end_time = time.time()
+        print(f"File processing completed in {end_time - start_time:.2f} seconds")
+        
+    except Exception as e:
+        file = File.objects.get(file_id=file_id)
+        
+        if file:
+            file.file_processed = file.FileProcessingStatus.FAILED
+            file.file_error = f"{e}"
+            file.save()
+            
+            print(f"File processing failed\n\n{e}")
+            
+        else:
+            print(f"file id {file_id} is not found")
+        
 
 @csrf_exempt
 def upload_file(request):
