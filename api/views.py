@@ -452,13 +452,16 @@ def list_files(request):
         # File 객체를 JSON 형태로 변환
         file_list = []
         for file in files:
+            file_processed_bool = (file.FileProcessingStatus.COMPLETED == file.file_processed)
+            
             file_data = {
                 "file_id": file.file_id,
                 "file_name": file.file_name,
                 "file_size_kb": file.file_size // 1024,
                 "file_type": file.file_type,
                 "file_path": file.file_path,
-                'file_processed': file.file_processed,
+                "file_processed": file_processed_bool,
+                "file_error": file.file_error,
                 "created_at": file.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             }
             file_list.append(file_data)
@@ -567,7 +570,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             try:
                 target_file = File.objects.get(file_id=sel_file_id,
                                                user_id=user,
-                                               file_processed=True)
+                                               file_processed=File.FileProcessingStatus.COMPLETED)
                 chat.file_id = target_file
             except File.DoesNotExist:
                 return JsonResponse({"response": 404,
@@ -620,7 +623,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             if target_file is None:
                 try:
                     target_file = File.objects.filter(
-                        user_id=user, file_processed=True).latest('updated_at')
+                        user_id=user, file_processed=File.FileProcessingStatus.COMPLETED).latest('updated_at')
                 except File.DoesNotExist:
                     assistant_final = "처리된 파일이 없습니다. 데이터를 먼저 업로드해 주세요."
                     break
@@ -793,7 +796,7 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             if target_file is None:
                 try:
                     target_file = File.objects.filter(user_id=user,
-                                                      file_processed=True).latest("updated_at")
+                                                      file_processed=File.FileProcessingStatus.COMPLETED).latest("updated_at")
                 except File.DoesNotExist:
                     assistant_final = "처리된 파일이 없습니다. 데이터를 먼저 업로드해 주세요."
                     break
