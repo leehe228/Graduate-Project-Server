@@ -14,4 +14,5 @@ urlpatterns = [
     path('chat/list', views.list_chats, name='list_chats'),
     path('chat/history', views.get_chat_history, name='get_chat_history'),
     path('chat/delete', views.delete_chat, name='delete_chat'),
+    path('demo', views.chat_demo, name='chat_demo')
 ]
