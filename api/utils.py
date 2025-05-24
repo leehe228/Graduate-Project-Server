@@ -12,6 +12,34 @@ from matplotlib.figure import Figure
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
+from matplotlib import font_manager as fm
+
+# ────── KOREAN FONT CONFIG ──────
+def _set_korean_font():
+    """
+    Replace default font with a Korean-capable font (NanumGothic, Noto Sans CJK, etc.).
+    Call this once at import time.
+    """
+    CANDIDATES = [
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+        "/System/Library/Fonts/AppleGothic.ttf",   # macOS fallback
+        "/usr/share/fonts/truetype/malgun/MalgunGothic.ttf",
+    ]
+    for path in CANDIDATES:
+        if Path(path).exists():
+            fm.fontManager.addfont(path)
+            font_name = fm.FontProperties(fname=path).get_name()
+            matplotlib.rcParams["font.family"] = font_name
+            # minus sign 깨짐 방지
+            matplotlib.rcParams["axes.unicode_minus"] = False
+            print(f"[matplotlib] Korean font set → {font_name}")
+            return
+    print("[matplotlib] WARNING: no Korean font found; glyphs may be missing.")
+
+_set_korean_font()
+# ─────────────────────────────────
+
 def file_to_sqlite(
     file_path: str | Path,
     db_path: str | Path,
