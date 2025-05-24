@@ -118,19 +118,20 @@ def execute_sqlite_query(
     Returns:
         DataFrame or list of tuples for SELECT queries, or int for other statements.
     """
-    print(repr(query.lstrip().upper()[:10]))
+    print(repr(query.lstrip().upper()))
     
-    sql = query.lstrip()
-    is_select = sql.upper().startswith("SELECT")
+    db_path = Path(db_path)
     with sqlite3.connect(db_path) as conn:
         cur = conn.cursor()
         cur.execute(query)
-        if is_select:
+
+        if cur.description is not None:
             rows    = cur.fetchall()
-            columns = [col[0] for col in cur.description] or []
+            columns = [col[0] for col in cur.description]
             if return_dataframe:
                 return pd.DataFrame(rows, columns=columns)
             return rows
+
         conn.commit()
         return cur.rowcount
 
