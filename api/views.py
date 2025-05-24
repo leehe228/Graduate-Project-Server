@@ -544,6 +544,22 @@ def delete_file(request):
             "data": None
         })
 
+
+def _record_error(chat: Chat, prev_msgs: list, image_url: str | None, err: Exception, label: str):
+    """에러를 assistant role 로 저장하고 history 리스트도 갱신."""
+    msg_txt = f"[ERROR/{label}] {err}"
+    # history에 추가 ― 다음 turn 에 LLM이 참고할 수 있음
+    prev_msgs.append({"role": "assistant", "content": msg_txt})
+    # DB에도 저장 (ASSISTANT 역할, 이미지 링크 유지)
+    Message.objects.create(
+        chat_id=chat,
+        message_text=msg_txt,
+        message_role=Message.MessageRole.ASSISTANT,
+        message_image_url=image_url
+    )
+    return msg_txt
+
+
 @csrf_exempt
 def start_chat(request: WSGIRequest) -> JsonResponse:
     if request.method != 'POST':
@@ -643,7 +659,8 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             try:
                 df = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
             except Exception as e:
-                assistant_final = f"SQL 실행 오류: {e}"
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "SQL")
+                need_more = False
                 break
             
             print("df: ")
@@ -675,8 +692,14 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             img_dir.mkdir(parents=True, exist_ok=True) 
             img_path = img_dir / f"{uuid.uuid4()}.png" 
 
-            run_pyplot_code(py_code, img_path)
-            image_url = "/" + str(img_path)
+            try:
+                run_pyplot_code(py_code, img_path)
+                image_url = "/" + str(img_path)
+            except Exception as e:
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "PLOT")
+                need_more = False
+                break
+                
             internal_log.append(f"\nPlot saved → {image_url}")
 
             prev_msgs.append({"role": "assistant",
@@ -838,8 +861,14 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             img_dir = Path(f"media/{user.user_id}/{chat.chat_id}")
             img_dir.mkdir(parents=True, exist_ok=True)
             img_path = img_dir / f"{uuid.uuid4()}.png"
-            run_pyplot_code(py_code, img_path)
-            image_url = "/" + str(img_path)
+            
+            try:
+                run_pyplot_code(py_code, img_path)
+                image_url = "/" + str(img_path)
+            except Exception as e:
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "PLOT")
+                need_more = False
+                break
 
             prev_msgs.append({"role": "assistant",
                               "content": f"Plot saved at {image_url}"})
