@@ -118,20 +118,22 @@ def execute_sqlite_query(
     Returns:
         DataFrame or list of tuples for SELECT queries, or int for other statements.
     """
-    db_path = Path(db_path)
+    print(repr(query.lstrip().upper()[:10]))
+    
+    sql = query.lstrip()
+    is_select = sql.upper().startswith("SELECT")
     with sqlite3.connect(db_path) as conn:
         cur = conn.cursor()
         cur.execute(query)
-
-        if query.lstrip().upper().startswith("SELECT"):
-            rows = cur.fetchall()
-            columns = [col[0] for col in cur.description] if cur.description else []
+        if is_select:
+            rows    = cur.fetchall()
+            columns = [col[0] for col in cur.description] or []
             if return_dataframe:
                 return pd.DataFrame(rows, columns=columns)
             return rows
-
         conn.commit()
         return cur.rowcount
+
 
 def run_pyplot_code(
     code: str,
