@@ -63,7 +63,7 @@ from CSV/Excel files; the full tables are too large to embed in the prompt.
       ```  
       and nothing else.  
     • After you receive the query result (or the plot is rendered) you will
-      return a single explanatory answer for the user and end that message
+      return a single explanatory answer in KOREAN for the user and end that message
       with the token <END>.  
     • If you need clarifying information, ask a concise follow-up question and
       end that message with the token <REQUEST_INFO>.
@@ -92,6 +92,7 @@ from CSV/Excel files; the full tables are too large to embed in the prompt.
 3.  **Plot generation**  
     • Use only `matplotlib.pyplot`.  
     • Do not set custom colors unless the user asks.  
+    • The title, label, and legend of the plot should be in Korean.
     • After coding, rely on the execution engine to run the code and send back
       the figure; do **not** describe the figure in the [PLOT] response.
 
