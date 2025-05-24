@@ -68,9 +68,10 @@ ul.list li:hover .delete-btn{display:block}
 .msg img{margin-top:6px;max-width:100%;border-radius:6px}
 .internal {
   background:#fff;
-  border:1px solid #ced4da;
-  color:#6c757d;
+  border:1px solid #e9ecef;
+  color:#a0a0a0;
   align-self:flex-start;
+  font-size: .8rem;
 }
 
 /* 입력 바 */
@@ -101,8 +102,8 @@ ul.list li:hover .delete-btn{display:block}
 <!-- ─────── MAIN ─────── -->
 <div id="main">
   <div id="top">
-    <input id="user-id" placeholder="User ID" value="tester" type="text">
-    <input id="password" placeholder="Password" type="password" value="password1234">
+    <input id="user-id" placeholder="User ID" value="" type="text">
+    <input id="password" placeholder="Password" type="password" value="">
     <button id="login-btn" class="top-login">로그인</button>
     <button id="toggle-internal" class="top-toggle" style="margin-left:4px">INTERNAL OFF</button>
     <button id="new-chat">새 채팅</button>
@@ -128,8 +129,8 @@ function addMsg(t,role,img){
   d.className="msg "+(
     role==="user" ? "user":
     role==="internal" ? "internal" : "assist");
-  d.textContent=t;
-  if(img){const i=new Image();i.src=img;d.appendChild(i);}
+  d.textContent=t + "\n";
+  if(img && role!=="internal"){const i=new Image();i.src=img;d.appendChild(i);}
   chatBox.appendChild(d);chatBox.scrollTop=chatBox.scrollHeight;
 }
 function clearChat(){chatBox.innerHTML="";}
@@ -161,7 +162,7 @@ async function listFiles(){
   j.data.forEach(f=>{
     const li=document.createElement("li");
     li.innerHTML=`<div class="item-title">${f.file_name}</div>
-                  <div class="item-sub">ID:${f.file_id} · ${f.file_size_kb}KB</div>
+                  <div class="item-sub">File ID: ${f.file_id} · ${f.file_size_kb}KB · 처리 상태: ${f.file_processed ? "완료" : "실패"}</div>
                   <div class="delete-btn">×</div>`;
     /* 선택 */
     li.onclick=e=>{
@@ -198,7 +199,7 @@ async function listChats(){
   j.data.chats.forEach(c=>{
     const li=document.createElement("li");
     li.innerHTML=`<div class="item-title">${c.chat_title||`채팅 ${c.chat_id}`}</div>
-                  <div class="item-sub">${c.updated_at} · ID:${c.chat_id}</div>
+                  <div class="item-sub">Chat ID: ${c.chat_id} · ${c.updated_at}</div>
                   <div class="delete-btn">×</div>`;
     /* load */
     li.onclick=e=>{
