@@ -14,5 +14,6 @@ urlpatterns = [
     path('api/chat/list', views.list_chats, name='list_chats'),
     path('api/chat/history', views.get_chat_history, name='get_chat_history'),
     path('api/chat/delete', views.delete_chat, name='delete_chat'),
+    path('api/chat/history/all', views.get_chat_history_all, name='get_chat_history_all'),
     path('demo/', views.chat_demo, name='chat_demo')
 ]

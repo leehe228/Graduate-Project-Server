@@ -975,6 +975,46 @@ def get_chat_history(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"response": 200, "message": "request success",
                          "data": {"messages": msg_list}})
 
+
+@csrf_exempt
+def get_chat_history_all(request: WSGIRequest) -> JsonResponse:
+    """특정 채팅방의 모든 메시지 리스트 반환"""
+    if request.method != "GET":
+        return JsonResponse({"response": 405, "message": "method not allowed", "data": None})
+
+    chat_id = request.GET.get("chat_id")
+    if not chat_id:
+        return JsonResponse({"response": 400, "message": "missing required fields", "data": None})
+
+    try:
+        chat = Chat.objects.get(chat_id=chat_id)
+    except Chat.DoesNotExist:
+        return JsonResponse({"response": 404, "message": "chat id is not found", "data": None})
+
+    msgs = (Message.objects
+            .filter(chat_id=chat)
+            .order_by("created_at"))
+    
+    def _message_role_to_str(role):
+        if role == Message.MessageRole.ASSISTANT:
+            return "assistant"
+        elif role == Message.MessageRole.USER:
+            return "user"
+        else:
+            return "internal"
+
+    msg_list = [{
+        "message_id": m.message_id,
+        "message_text": m.message_text,
+        "message_role": _message_role_to_str(m.message_role),
+        "message_image_url": m.message_image_url,
+        "created_at": m.created_at.strftime("%Y/%m/%d %H:%M:%S")
+    } for m in msgs]
+
+    return JsonResponse({"response": 200, "message": "request success",
+                         "data": {"messages": msg_list}})
+    
+
 @csrf_exempt
 def delete_chat(request: WSGIRequest) -> JsonResponse:
     """채팅방 및 하위 메시지·이미지 삭제"""
