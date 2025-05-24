@@ -1003,3 +1003,6 @@ def delete_chat(request: WSGIRequest) -> JsonResponse:
                          "message": "chat deletion success",
                          "data": None})
 
+@csrf_exempt
+def chat_demo(request):
+    return render(request, "api/chat_demo.html")

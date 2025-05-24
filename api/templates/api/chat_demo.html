@@ -1,0 +1,252 @@
+<!-- templates/chat_demo.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>POS-Insight Demo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --sidebar-bg:#f8f9fa;  --sidebar-border:#dee2e6;
+  --accent:#0d6efd;      --accent-light:#e7f1ff;
+  --bubble-user:#0d6efd; --bubble-assist:#e9ecef;
+  --selected-bg:#e1e3e5; --gray-btn:#ced4da;
+}
+body{margin:0;height:100vh;display:flex;overflow:hidden;
+     font-family:Segoe UI,Helvetica,Arial,sans-serif}
+
+/* ────────── SIDEBAR ────────── */
+#sidebar{width:280px;min-width:240px;display:flex;flex-direction:column;
+         border-right:1px solid var(--sidebar-border);background:var(--sidebar-bg)}
+.section{display:flex;align-items:center;justify-content:space-between;
+         padding:10px 14px;border-bottom:1px solid var(--sidebar-border);
+         font-weight:600;font-size:.9rem;color:#495057}
+.small-btn{padding:2px 8px;font-size:.72rem;background:var(--gray-btn);
+           border:none;border-radius:4px;cursor:pointer}
+.small-btn:hover{background:#bfc4c9}
+
+ul.list{list-style:none;margin:0;padding:6px 0;overflow-y:auto;flex:1}
+ul.list li{position:relative;cursor:pointer;padding:8px 34px 8px 14px;
+           margin:4px 8px;border-radius:8px;transition:.15s background}
+ul.list li:hover:not(.active){background:var(--accent-light)}
+ul.list li.active{background:var(--selected-bg);
+                  box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.item-title{font-size:.85rem;color:#212529}
+.item-sub  {font-size:.7rem;color:#6c757d;margin-top:2px}
+
+/* X(delete) 버튼 */
+.delete-btn{display:none;position:absolute;top:8px;right:10px;width:18px;height:18px;
+            line-height:18px;font-size:.75rem;text-align:center;border-radius:50%;
+            background:rgba(219, 219, 219, 0);color:#adadad;cursor:pointer}
+ul.list li:hover .delete-btn{display:block}
+
+#upload-wrap{padding:12px;border-top:1px solid var(--sidebar-border)}
+
+/* ────────── MAIN ────────── */
+#main{flex:1;display:flex;flex-direction:column}
+#top{display:flex;gap:6px;align-items:center;padding:10px;
+     border-bottom:1px solid #ddd;background:#fff}
+#top input{padding:6px 8px;border:1px solid #ced4da;border-radius:4px;font-size:.85rem}
+#user-id{width:120px} #password{width:120px}
+.top-login{padding:6px 12px;font-size:.85rem;border:1px solid #6c757d;border-radius:4px;
+           background:#6c757d;color:#fff;cursor:pointer}
+.top-login:disabled{opacity:.6;cursor:default}
+#new-chat{margin-left:auto;padding:6px 12px;font-size:.85rem;border:1px solid var(--accent);
+          border-radius:4px;background:var(--accent);color:#fff;cursor:pointer}
+#new-chat:hover{background:#0b5ed7}
+
+/* 채팅 버블 */
+#chat{flex:1;display:flex;flex-direction:column;gap:6px;overflow-y:auto;
+      padding:18px;background:#fdfdfd}
+.msg{max-width:60%;padding:10px 14px;border-radius:16px;font-size:.9rem;
+     line-height:1.35;white-space:pre-wrap;word-break:break-word}
+.user  {background:var(--bubble-user);color:#fff;align-self:flex-end}
+.assist{background:var(--bubble-assist);color:#212529;align-self:flex-start}
+.msg img{margin-top:6px;max-width:100%;border-radius:6px}
+
+/* 입력 바 */
+#input-bar{display:flex;gap:8px;padding:12px;border-top:1px solid #ddd;background:#fff}
+#input-bar input{flex:1;padding:8px 10px;border:1px solid #ced4da;border-radius:6px;font-size:.9rem}
+#send{padding:9px 18px;font-size:.9rem;border:none;border-radius:6px;font-weight:600;cursor:pointer;
+      background:linear-gradient(135deg,#0d6efd 0%,#66a3ff 100%);color:#fff;
+      box-shadow:0 2px 4px rgba(0,0,0,.15);transition:.15s transform}
+#send:hover{transform:translateY(-1px)} #send:active{transform:translateY(0)}
+</style>
+</head>
+<body>
+<!-- ─────── SIDEBAR ─────── -->
+<div id="sidebar">
+  <div class="section">파일 목록
+    <button id="refresh-files" class="small-btn">새로고침</button>
+  </div>
+  <ul id="files" class="list"></ul>
+
+  <div class="section">채팅 목록
+    <button id="refresh-chats" class="small-btn">새로고침</button>
+  </div>
+  <ul id="chats" class="list"></ul>
+
+  <div id="upload-wrap"><input id="upload-file" type="file" style="width:100%"></div>
+</div>
+
+<!-- ─────── MAIN ─────── -->
+<div id="main">
+  <div id="top">
+    <input id="user-id" placeholder="User ID">
+    <input id="password" placeholder="Password" type="password">
+    <button id="login-btn" class="top-login">로그인</button>
+    <button id="new-chat">새 채팅</button>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="input-bar">
+    <input id="msg" type="text" placeholder="메시지 입력">
+    <button id="send">전송</button>
+  </div>
+</div>
+
+<script>
+const server="/api";
+let chatId=null,fileId=null,loggedIn=false;
+const $=s=>document.querySelector(s), chatBox=$("#chat");
+
+/* ───── 공통 util ───── */
+function addMsg(t,role,img){
+  const d=document.createElement("div");
+  d.className="msg "+(role==="user"?"user":"assist");
+  d.textContent=t;
+  if(img){const i=new Image();i.src=img;d.appendChild(i);}
+  chatBox.appendChild(d);chatBox.scrollTop=chatBox.scrollHeight;
+}
+function clearChat(){chatBox.innerHTML="";}
+function lockAuth(){
+  $("#user-id").disabled=$("#password").disabled=$("#login-btn").disabled=true;
+  $("#login-btn").textContent="로그인됨"; loggedIn=true;
+}
+
+/* ───── 로그인 ───── */
+async function login(){
+  const uid=$("#user-id").value.trim(), pw=$("#password").value.trim();
+  if(!uid||!pw){alert("ID/PW 필요");return;}
+  const res=await fetch(`${server}/auth/login`,{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user_id:uid,user_password:pw})
+  });
+  const j=await res.json();
+  if(j.response===200){lockAuth(); listFiles(); listChats();}
+  else alert(j.message);
+}
+
+/* ───── 파일 목록 / 업로드 / 삭제 ───── */
+async function listFiles(){
+  if(!loggedIn)return; const uid=$("#user-id").value.trim();
+  const j=await fetch(`${server}/files/list?user_id=${uid}`).then(r=>r.json());
+  if(j.response!==200)return;
+  const ul=$("#files"); ul.innerHTML="";
+  j.data.forEach(f=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<div class="item-title">${f.file_name}</div>
+                  <div class="item-sub">ID:${f.file_id} · ${f.file_size_kb}KB</div>
+                  <div class="delete-btn">×</div>`;
+    /* 선택 */
+    li.onclick=e=>{
+      if(e.target.classList.contains("delete-btn")) return;
+      [...ul.children].forEach(x=>x.classList.remove("active"));
+      li.classList.add("active"); fileId=f.file_id;
+    };
+    /* 삭제 */
+    li.querySelector(".delete-btn").onclick=async ev=>{
+      ev.stopPropagation();
+      if(!confirm("파일을 삭제하시겠습니까?"))return;
+      const r=await fetch(`${server}/files/delete?file_id=${f.file_id}`,{method:"DELETE"});
+      const res=await r.json(); alert(res.message);
+      if(res.response===200) listFiles();
+    };
+    ul.appendChild(li);
+  });
+}
+async function uploadFile(){
+  if(!loggedIn)return alert("로그인 필요");
+  const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0];
+  if(!file)return;
+  const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file);
+  const j=await fetch(`${server}/files/upload`,{method:"POST",body:fd}).then(r=>r.json());
+  alert(j.message); if(j.response===200) listFiles();
+}
+
+/* ───── 채팅 목록 / 로드 / 삭제 ───── */
+async function listChats(){
+  if(!loggedIn)return; const uid=$("#user-id").value.trim();
+  const j=await fetch(`${server}/chat/list?user_id=${uid}`).then(r=>r.json());
+  if(j.response!==200)return;
+  const ul=$("#chats"); ul.innerHTML="";
+  j.data.chats.forEach(c=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<div class="item-title">${c.chat_title||`채팅 ${c.chat_id}`}</div>
+                  <div class="item-sub">${c.updated_at} · ID:${c.chat_id}</div>
+                  <div class="delete-btn">×</div>`;
+    /* load */
+    li.onclick=e=>{
+      if(e.target.classList.contains("delete-btn")) return;
+      loadChat(c.chat_id,li);
+    };
+    /* delete */
+    li.querySelector(".delete-btn").onclick=async ev=>{
+      ev.stopPropagation();
+      if(!confirm("채팅을 삭제하시겠습니까?"))return;
+      const r=await fetch(`${server}/chat/delete?chat_id=${c.chat_id}`,{method:"DELETE"});
+      const res=await r.json(); alert(res.message);
+      if(res.response===200){
+        listChats(); if(chatId===c.chat_id){chatId=null;clearChat();}
+      }
+    };
+    ul.appendChild(li);
+  });
+}
+async function loadChat(id,li){
+  const j=await fetch(`${server}/chat/history?chat_id=${id}`).then(r=>r.json());
+  if(j.response!==200)return;
+  chatId=id; fileId=null; clearChat();
+  [...$("#chats").children].forEach(x=>x.classList.remove("active"));
+  li.classList.add("active");
+  j.data.messages.forEach(m=>addMsg(m.message_text,m.message_role,m.message_image_url));
+}
+function newChat(){chatId=null;clearChat();
+  [...$("#chats").children].forEach(x=>x.classList.remove("active"));}
+
+/* ───── 메시지 전송 ───── */
+async function sendMsg(){
+  if(!loggedIn)return alert("로그인 필요");
+  const uid=$("#user-id").value.trim(), text=$("#msg").value.trim();
+  if(!text)return; $("#msg").value=""; addMsg(text,"user");
+  if(chatId===null){
+    const payload={user_id:uid,message_text:text}; if(fileId)payload.file_id=fileId;
+    const j=await fetch(`${server}/chat/start`,{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    }).then(r=>r.json());
+    if(j.response!==200){addMsg("ERROR: "+j.message,"assist");return;}
+    chatId=j.data.chat_id; listChats();
+    addMsg(j.data.response,"assist",j.data.image_url);
+  }else{
+    const j=await fetch(`${server}/chat/query`,{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({chat_id:chatId,message_text:text})
+    }).then(r=>r.json());
+    if(j.response!==200){addMsg("ERROR: "+j.message,"assist");return;}
+    addMsg(j.data.response,"assist",j.data.image_url);
+  }
+}
+
+/* ───── 이벤트 바인딩 ───── */
+$("#login-btn").onclick=login;
+$("#refresh-files").onclick=listFiles;
+$("#refresh-chats").onclick=listChats;
+$("#upload-file").onchange=uploadFile;
+$("#new-chat").onclick=newChat;
+$("#send").onclick=sendMsg;
+$("#msg").addEventListener("keyup",e=>{if(e.key==="Enter")sendMsg();});
+</script>
+</body>
+</html>
