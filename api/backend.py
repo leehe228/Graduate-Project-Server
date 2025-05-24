@@ -16,7 +16,8 @@ def langchain(
     model: ChatOpenAI,
     system_prompt: str | None,
     prev_messages: list[dict[str, str]] | None,
-    message: str
+    message: str,
+    max_tokens: int = 4096
 ) -> str:
     """
     Args:
@@ -29,7 +30,7 @@ def langchain(
     """
     
     trimmer = trim_messages(
-        max_tokens=1024,
+        max_tokens=max_tokens,
         strategy="last",
         token_counter=model,
         include_system=True,
