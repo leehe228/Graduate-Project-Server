@@ -1,5 +1,6 @@
 import dotenv
 import re
+from typing import Generator, Union
 
 from langchain_core.messages.utils import trim_messages
 from langchain_core.messages import (
@@ -17,7 +18,8 @@ def langchain(
     system_prompt: str | None,
     prev_messages: list[dict[str, str]] | None,
     message: str,
-    max_tokens: int = 4096
+    max_tokens: int = 4096,
+    streaming: bool = False
 ) -> str:
     """
     Args:
@@ -52,8 +54,16 @@ def langchain(
     trimmed = trimmer.invoke(messages) if messages else []
     trimmed.append(HumanMessage(content=message))
     
-    response = model.invoke(trimmed)
-    return response.content
+    if streaming:
+        def gen():
+            for chunk in model.stream(trimmed):
+                delta = chunk.content
+                if delta:
+                    yield delta
+        return gen()
+    else:
+        return model.invoke(trimmed).content
+
 
 POS_TEXT2SQL_PROMPT = r"""You are “POS-SQL-Gen”, an expert assistant that turns natural-language
 questions about point-of-sale (POS) data into SQLite-compatible SQL.
