@@ -43,7 +43,7 @@ def _eval_date_placeholder(expr: str) -> str:
             kwargs[k.strip()] = int(v)
     return getattr(utils, fn_name)(**kwargs) 
 
-MESSAGE_SYSTEM_PROMPT = """You are **POS-Insight**, a data-analysis assistant that answers natural-language
+MESSAGE_SYSTEM_PROMPT = """You are **POS-Insight**, a data-analysis assistant that answers natural-language  
 questions about point-of-sale (POS) sales, inventory, and customer segments.  
 All structured data lives in one or more SQLite databases that were generated
 from CSV/Excel files; the full tables are too large to embed in the prompt.
@@ -63,24 +63,24 @@ from CSV/Excel files; the full tables are too large to embed in the prompt.
       ```  
       and nothing else.  
     • After you receive the query result (or the plot is rendered) you will
-      return a single explanatory answer for the user and end that message
+      return a single explanatory answer in KOREAN for the user and end that message
       with the token <END>.  
     • If you need clarifying information, ask a concise follow-up question and
       end that message with the token <REQUEST_INFO>.
     
-    DATE UTILITIES
+    DATE UTILITIES  
     • When you need an absolute calendar value, **do not guess**.  
     • Instead, output one of the placeholders below on its own line:  
-    {{get_date(year_diff=Y, month_diff=M, week_diff=W, day_diff=D, weekday=WD)}} 
-    {{get_weekdate(week_diff=W, weekday=WD)}}  
-    The backend will execute the function and substitute the placeholder with
-    an ISO-8601 date string before the next model turn.
+      {{get_date(year_diff=Y, month_diff=M, week_diff=W, day_diff=D, weekday=WD)}}  
+      {{get_weekdate(week_diff=W, weekday=WD)}}  
+      The backend will execute the function and substitute the placeholder with
+      an ISO-8601 date string before the next model turn.
 
-    CLARIFICATION PROTOCOL
+    CLARIFICATION PROTOCOL  
     • If the user’s question is ambiguous or missing a key parameter, ask a single,
-    concise follow-up that ends with the token <ASK_USER>.  
-    That message will be shown directly to the user and counts as the final
-    assistant output for this request.
+      concise follow-up that ends with the token <ASK_USER>.  
+      That message will be shown directly to the user and counts as the final
+      assistant output for this request.
 
 2.  **SQL generation**  
     • Use valid SQLite 3 syntax.  
@@ -91,7 +91,16 @@ from CSV/Excel files; the full tables are too large to embed in the prompt.
 
 3.  **Plot generation**  
     • Use only `matplotlib.pyplot`.  
+    • **Do NOT access any database, file, or external resource** (e.g. `sqlite3`,  
+      `pandas.read_sql`, `open(...)`) inside the [PLOT] code.  
+    • Declare all data explicitly in code, e.g.  
+      ```python
+      x = [2021, 2022, 2023, 2024]
+      y = [50, 100, 150, 200]
+      ```  
+      (lists, dicts, DataFrames 등 자유 형식).  
     • Do not set custom colors unless the user asks.  
+    • The title, label, and legend of the plot should be in Korean.  
     • After coding, rely on the execution engine to run the code and send back
       the figure; do **not** describe the figure in the [PLOT] response.
 
@@ -112,7 +121,7 @@ C. “20대 여성 고객이 가장 많이 산 상품은?” → [T2S] + ```sql`
 D. “재고 부족 또는 폐기율 높은 상품은?” → [T2S] + ```sql```  
 E. “신제품 출시 후 기존 메뉴 매출은?” → [PLOT] + ```python```
 
-Remember: obey the protocol exactly--no extra text outside the specified
+Remember: obey the protocol exactly—no extra text outside the specified
 formats."""
 
 # Create your views here.
@@ -535,6 +544,22 @@ def delete_file(request):
             "data": None
         })
 
+
+def _record_error(chat: Chat, prev_msgs: list, image_url: str | None, err: Exception, label: str):
+    """에러를 assistant role 로 저장하고 history 리스트도 갱신."""
+    msg_txt = f"[ERROR/{label}] {err}"
+    # history에 추가 ― 다음 turn 에 LLM이 참고할 수 있음
+    prev_msgs.append({"role": "assistant", "content": msg_txt})
+    # DB에도 저장 (ASSISTANT 역할, 이미지 링크 유지)
+    Message.objects.create(
+        chat_id=chat,
+        message_text=msg_txt,
+        message_role=Message.MessageRole.ASSISTANT,
+        message_image_url=image_url
+    )
+    return msg_txt
+
+
 @csrf_exempt
 def start_chat(request: WSGIRequest) -> JsonResponse:
     if request.method != 'POST':
@@ -634,7 +659,8 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             try:
                 df = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
             except Exception as e:
-                assistant_final = f"SQL 실행 오류: {e}"
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "SQL")
+                need_more = False
                 break
             
             print("df: ")
@@ -666,8 +692,14 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             img_dir.mkdir(parents=True, exist_ok=True) 
             img_path = img_dir / f"{uuid.uuid4()}.png" 
 
-            run_pyplot_code(py_code, img_path)
-            image_url = "/" + str(img_path)
+            try:
+                run_pyplot_code(py_code, img_path)
+                image_url = "/" + str(img_path)
+            except Exception as e:
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "PLOT")
+                need_more = False
+                break
+                
             internal_log.append(f"\nPlot saved → {image_url}")
 
             prev_msgs.append({"role": "assistant",
@@ -829,8 +861,14 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
             img_dir = Path(f"media/{user.user_id}/{chat.chat_id}")
             img_dir.mkdir(parents=True, exist_ok=True)
             img_path = img_dir / f"{uuid.uuid4()}.png"
-            run_pyplot_code(py_code, img_path)
-            image_url = "/" + str(img_path)
+            
+            try:
+                run_pyplot_code(py_code, img_path)
+                image_url = "/" + str(img_path)
+            except Exception as e:
+                assistant_final = _record_error(chat, prev_msgs, image_url, e, "PLOT")
+                need_more = False
+                break
 
             prev_msgs.append({"role": "assistant",
                               "content": f"Plot saved at {image_url}"})
