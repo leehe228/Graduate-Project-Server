@@ -657,19 +657,31 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
             internal_log.append(f"\nSQL:\n{sql_query}")
 
             try:
-                df = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
+                result = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
             except Exception as e:
                 assistant_final = _record_error(chat, prev_msgs, image_url, e, "SQL")
                 need_more = False
                 break
             
-            print("df: ")
-            print(df)
-            if df.empty:
-                assistant_final = "SQL 쿼리 결과가 없습니다."
-                break
-
-            preview = df.head(5).to_markdown(index=False)
+            if isinstance(result, pd.DataFrame):
+                if result.empty:
+                    assistant_final = "SQL 쿼리 결과가 없습니다."
+                    break
+                preview = result.head(5).to_markdown(index=False)
+                
+            elif isinstance(result, list):
+                if not result:
+                    assistant_final = "SQL 쿼리 결과가 없습니다."
+                    break
+                tmp_df = pd.DataFrame(result, columns=[f"c{i+1}" for i in range(len(result[0]))])
+                preview = tmp_df.head(5).to_markdown(index=False)
+                
+            elif isinstance(result, int):
+                preview = f"{result:,} row(s) affected."
+                
+            else:   # pd.Series 등 예외적인 타입 대비
+                preview = str(result)[:500]
+            
             internal_log.append(f"\nResult preview:\n{preview}")
 
             prev_msgs.append({"role": "assistant",
@@ -835,15 +847,31 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
 
             sql_query = text2sql(model, user_input, target_file.file_schema)
             try:
-                df = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
+                result = execute_sqlite_query(target_file.file_sqlpath, sql_query, True)
             except Exception as e:
                 assistant_final = f"SQL 실행 오류: {e}"
                 break
-            if df.empty:
-                assistant_final = "SQL 쿼리 결과가 없습니다."
-                break
+            
+            if isinstance(result, pd.DataFrame):
+                if result.empty:
+                    assistant_final = "SQL 쿼리 결과가 없습니다."
+                    break
+                preview = result.head(5).to_markdown(index=False)
 
-            preview = df.head(5).to_markdown(index=False)
+            elif isinstance(result, list):
+                if not result:
+                    assistant_final = "SQL 쿼리 결과가 없습니다."
+                    break
+                
+                tmp_df = pd.DataFrame(result, columns=[f"c{i+1}" for i in range(len(result[0]))])
+                preview = tmp_df.head(5).to_markdown(index=False)
+                
+            elif isinstance(result, int):
+                preview = f"{result:,} row(s) affected."
+                
+            else:
+                preview = str(result)[:500]
+
             prev_msgs.append({"role": "assistant",
                               "content": f"```sql\n{sql_query}\n```\n{preview}"})
             Message.objects.create(chat_id=chat,
