@@ -19,7 +19,7 @@ body{margin:0;height:100vh;display:flex;overflow:hidden;
 #sidebar{width:280px;min-width:240px;display:flex;flex-direction:column;
          border-right:1px solid var(--sidebar-border);background:var(--sidebar-bg)}
 .section{display:flex;align-items:center;justify-content:space-between;
-         padding:10px 14px;border-bottom:1px solid var(--sidebar-border);
+         padding:10px 14px;border-top:1px solid var(--sidebar-border);border-bottom:1px solid var(--sidebar-border);
          font-weight:600;font-size:.9rem;color:#495057}
 .small-btn{padding:2px 8px;font-size:.72rem;background:var(--gray-btn);
            border:none;border-radius:4px;cursor:pointer}
@@ -55,6 +55,9 @@ ul.list li:hover .delete-btn{display:block}
           border-radius:4px;background:var(--accent);color:#fff;cursor:pointer}
 #new-chat:hover{background:#0b5ed7}
 
+.top-toggle{padding:6px 12px;font-size:.85rem;border:1px solid #6c757d;border-radius:4px;
+           background:#6c757d;color:#fff;cursor:pointer}
+
 /* 채팅 버블 */
 #chat{flex:1;display:flex;flex-direction:column;gap:6px;overflow-y:auto;
       padding:18px;background:#fdfdfd}
@@ -63,12 +66,18 @@ ul.list li:hover .delete-btn{display:block}
 .user  {background:var(--bubble-user);color:#fff;align-self:flex-end}
 .assist{background:var(--bubble-assist);color:#212529;align-self:flex-start}
 .msg img{margin-top:6px;max-width:100%;border-radius:6px}
+.internal {
+  background:#fff;
+  border:1px solid #ced4da;
+  color:#6c757d;
+  align-self:flex-start;
+}
 
 /* 입력 바 */
-#input-bar{display:flex;gap:8px;padding:12px;border-top:1px solid #ddd;background:#fff}
+#input-bar{display:none;gap:8px;padding:12px;border-top:1px solid #ddd;background:#fff}
 #input-bar input{flex:1;padding:8px 10px;border:1px solid #ced4da;border-radius:6px;font-size:.9rem}
 #send{padding:9px 18px;font-size:.9rem;border:none;border-radius:6px;font-weight:600;cursor:pointer;
-      background:linear-gradient(135deg,#0d6efd 0%,#66a3ff 100%);color:#fff;
+      background:var(--accent);color:#fff;
       box-shadow:0 2px 4px rgba(0,0,0,.15);transition:.15s transform}
 #send:hover{transform:translateY(-1px)} #send:active{transform:translateY(0)}
 </style>
@@ -92,9 +101,10 @@ ul.list li:hover .delete-btn{display:block}
 <!-- ─────── MAIN ─────── -->
 <div id="main">
   <div id="top">
-    <input id="user-id" placeholder="User ID">
-    <input id="password" placeholder="Password" type="password">
+    <input id="user-id" placeholder="User ID" value="tester" type="text">
+    <input id="password" placeholder="Password" type="password" value="password1234">
     <button id="login-btn" class="top-login">로그인</button>
+    <button id="toggle-internal" class="top-toggle" style="margin-left:4px">INTERNAL OFF</button>
     <button id="new-chat">새 채팅</button>
   </div>
 
@@ -109,12 +119,15 @@ ul.list li:hover .delete-btn{display:block}
 <script>
 const server="/api";
 let chatId=null,fileId=null,loggedIn=false;
+let showInternal=false;
 const $=s=>document.querySelector(s), chatBox=$("#chat");
 
 /* ───── 공통 util ───── */
 function addMsg(t,role,img){
   const d=document.createElement("div");
-  d.className="msg "+(role==="user"?"user":"assist");
+  d.className="msg "+(
+    role==="user" ? "user":
+    role==="internal" ? "internal" : "assist");
   d.textContent=t;
   if(img){const i=new Image();i.src=img;d.appendChild(i);}
   chatBox.appendChild(d);chatBox.scrollTop=chatBox.scrollHeight;
@@ -123,6 +136,7 @@ function clearChat(){chatBox.innerHTML="";}
 function lockAuth(){
   $("#user-id").disabled=$("#password").disabled=$("#login-btn").disabled=true;
   $("#login-btn").textContent="로그인됨"; loggedIn=true;
+  $("#input-bar").style.display = "flex";
 }
 
 /* ───── 로그인 ───── */
@@ -205,12 +219,16 @@ async function listChats(){
   });
 }
 async function loadChat(id,li){
-  const j=await fetch(`${server}/chat/history?chat_id=${id}`).then(r=>r.json());
+  const api = showInternal ? "/chat/history/all" : "/chat/history";
+  const j=await fetch(`${server}${api}?chat_id=${id}`).then(r=>r.json());
   if(j.response!==200)return;
   chatId=id; fileId=null; clearChat();
   [...$("#chats").children].forEach(x=>x.classList.remove("active"));
   li.classList.add("active");
-  j.data.messages.forEach(m=>addMsg(m.message_text,m.message_role,m.message_image_url));
+  j.data.messages.forEach(m=>{
+    if(!showInternal && m.message_role==="internal") return;
+    addMsg(m.message_text,m.message_role,m.message_image_url);
+  });
 }
 function newChat(){chatId=null;clearChat();
   [...$("#chats").children].forEach(x=>x.classList.remove("active"));}
@@ -239,6 +257,17 @@ async function sendMsg(){
   }
 }
 
+function toggleInternal(){
+  showInternal = !showInternal;
+  $("#toggle-internal").textContent = showInternal ? "INTERNAL ON" : "INTERNAL OFF";
+  $("#toggle-internal").style.background = showInternal ? "#f1ad26" : "#6c757d";
+  // 현재 채팅방이 열려 있으면 즉시 새로고침
+  if(chatId){
+    const active = [...$("#chats").children].find(li=>li.classList.contains("active"));
+    if(active) loadChat(chatId,active);
+  }
+}
+
 /* ───── 이벤트 바인딩 ───── */
 $("#login-btn").onclick=login;
 $("#refresh-files").onclick=listFiles;
@@ -247,6 +276,7 @@ $("#upload-file").onchange=uploadFile;
 $("#new-chat").onclick=newChat;
 $("#send").onclick=sendMsg;
 $("#msg").addEventListener("keyup",e=>{if(e.key==="Enter")sendMsg();});
+$("#toggle-internal").onclick = toggleInternal;
 </script>
 </body>
 </html>
