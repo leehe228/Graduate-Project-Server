@@ -81,6 +81,19 @@ ul.list li:hover .delete-btn{display:block}
       background:var(--accent);color:#fff;
       box-shadow:0 2px 4px rgba(0,0,0,.15);transition:.15s transform}
 #send:hover{transform:translateY(-1px)} #send:active{transform:translateY(0)}
+
+/* 로딩 */
+#loading{
+  position:fixed;inset:0;display:none;z-index:9999;
+  background:rgba(255,255,255,.6);backdrop-filter:blur(1px);
+}
+#loading::after{
+  content:"";width:46px;height:46px;border-radius:50%;
+  border:5px solid var(--accent-light);border-top-color:var(--accent);
+  position:absolute;top:50%;left:50%;margin:-23px 0 0 -23px;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -105,6 +118,7 @@ ul.list li:hover .delete-btn{display:block}
     <input id="user-id" placeholder="User ID" value="" type="text">
     <input id="password" placeholder="Password" type="password" value="">
     <button id="login-btn" class="top-login">로그인</button>
+    <button id="logout-btn" class="top-login" style="display:none">로그아웃</button>
     <button id="toggle-internal" class="top-toggle" style="margin-left:4px">INTERNAL OFF</button>
     <button id="new-chat">새 채팅</button>
   </div>
@@ -123,6 +137,41 @@ let chatId=null,fileId=null,loggedIn=false;
 let showInternal=false;
 const $=s=>document.querySelector(s), chatBox=$("#chat");
 
+function startLoading(){
+  $("#loading").style.display="block";
+}
+function stopLoading(){
+  $("#loading").style.display="none";
+}
+
+function lockMessageSend(){
+  $("#msg").disabled=true; $("#send").disabled=true;
+  $("#msg").placeholder=""; $("#send").textContent="응답중"; $("#send").style.background="#6c757d"; 
+  $("#send").style.color="#fff"; $("#send").style.cursor="default";
+  $("#msg").value=""; // 메시지 입력창 초기화
+  $("#send").style.boxShadow="none"; // 버튼 비활성화 스타일
+}
+function unlockMessageSend(){
+  $("#msg").disabled=false; $("#send").disabled=false;
+  $("#msg").placeholder="메시지 입력"; $("#send").textContent="전송";
+  $("#send").style.background="var(--accent)";
+  $("#send").style.color="#fff"; $("#send").style.cursor="pointer";
+  $("#send").style.boxShadow="0 2px 4px rgba(0,0,0,.15)"; // 버튼 활성화 스타일
+  $("#msg").value=""; // 메시지 입력창 초기화
+  chatBox.scrollTop = chatBox.scrollHeight; // 스크롤을 맨 아래로
+}
+
+/* ───── 페이지 로드 시 자동 로그인 ───── */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const savedId = localStorage.getItem('user_id');
+  const savedPw = localStorage.getItem('password');
+  if (savedId && savedPw) {
+    $("#user-id").value = savedId;
+    $("#password").value = savedPw;
+    login();
+  }
+});
+
 /* ───── 공통 util ───── */
 function addMsg(t,role,img){
   const d=document.createElement("div");
@@ -138,25 +187,61 @@ function lockAuth(){
   $("#user-id").disabled=$("#password").disabled=$("#login-btn").disabled=true;
   $("#login-btn").textContent="로그인됨"; loggedIn=true;
   $("#input-bar").style.display = "flex";
+  $("#logout-btn").style.display = "inline-block";
 }
 
 /* ───── 로그인 ───── */
 async function login(){
   const uid=$("#user-id").value.trim(), pw=$("#password").value.trim();
   if(!uid||!pw){alert("ID/PW 필요");return;}
+  startLoading();
+  $("#login-btn").disabled = true; $("#login-btn").textContent = "로그인중";
   const res=await fetch(`${server}/auth/login`,{
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({user_id:uid,user_password:pw})
   });
   const j=await res.json();
-  if(j.response===200){lockAuth(); listFiles(); listChats();}
-  else alert(j.message);
+  stopLoading();
+  if(j.response===200){
+    localStorage.setItem('user_id', uid);
+    localStorage.setItem('password', pw);
+    lockAuth(); listFiles(); listChats();
+  }
+  else {
+    alert(j.message);
+    $("#login-btn").disabled = false; $("#login-btn").textContent = "로그인";
+  }
+}
+
+/* ───── 로그아웃 ───── */
+async function logout(){
+  // 저장된 인증정보 제거
+  localStorage.removeItem('user_id');
+  localStorage.removeItem('password');
+  // UI 리셋
+  loggedIn = false;
+  $("#logout-btn").style.display = "none";
+  $("#login-btn").disabled = false;
+  $("#login-btn").textContent = "로그인";
+  $("#user-id").disabled = false;
+  $("#password").disabled = false;
+  $("#user-id").value = "";
+  $("#password").value = "";
+  $("#input-bar").style.display = "none";
+  // 목록 초기화
+  $("#files").innerHTML = "";
+  $("#chats").innerHTML = "";
+  clearChat();
 }
 
 /* ───── 파일 목록 / 업로드 / 삭제 ───── */
 async function listFiles(){
   if(!loggedIn)return; const uid=$("#user-id").value.trim();
+  startLoading();
+  $("#refresh-files").disabled = true; $("#refresh-files").textContent = "로딩중";
   const j=await fetch(`${server}/files/list?user_id=${uid}`).then(r=>r.json());
+  stopLoading();
+  $("#refresh-files").disabled = false; $("#refresh-files").textContent = "새로고침";
   if(j.response!==200)return;
   const ul=$("#files"); ul.innerHTML="";
   j.data.forEach(f=>{
@@ -174,8 +259,10 @@ async function listFiles(){
     li.querySelector(".delete-btn").onclick=async ev=>{
       ev.stopPropagation();
       if(!confirm("파일을 삭제하시겠습니까?"))return;
+      startLoading();
       const r=await fetch(`${server}/files/delete?file_id=${f.file_id}`,{method:"DELETE"});
       const res=await r.json(); alert(res.message);
+      stopLoading();
       if(res.response===200) listFiles();
     };
     ul.appendChild(li);
@@ -186,14 +273,21 @@ async function uploadFile(){
   const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0];
   if(!file)return;
   const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file);
+  startLoading();
   const j=await fetch(`${server}/files/upload`,{method:"POST",body:fd}).then(r=>r.json());
+  stopLoading();
+  $("#upload-file").value=""; // 파일 업로드 후 input 초기화
   alert(j.message); if(j.response===200) listFiles();
 }
 
 /* ───── 채팅 목록 / 로드 / 삭제 ───── */
 async function listChats(){
   if(!loggedIn)return; const uid=$("#user-id").value.trim();
+  startLoading();
+  $("#refresh-chats").disabled = true; $("#refresh-chats").textContent = "로딩중";
   const j=await fetch(`${server}/chat/list?user_id=${uid}`).then(r=>r.json());
+  stopLoading();
+  $("#refresh-chats").disabled = false; $("#refresh-chats").textContent = "새로고침";
   if(j.response!==200)return;
   const ul=$("#chats"); ul.innerHTML="";
   j.data.chats.forEach(c=>{
@@ -210,8 +304,10 @@ async function listChats(){
     li.querySelector(".delete-btn").onclick=async ev=>{
       ev.stopPropagation();
       if(!confirm("채팅을 삭제하시겠습니까?"))return;
+      startLoading();
       const r=await fetch(`${server}/chat/delete?chat_id=${c.chat_id}`,{method:"DELETE"});
       const res=await r.json(); alert(res.message);
+      stopLoading();
       if(res.response===200){
         listChats(); if(chatId===c.chat_id){chatId=null;clearChat();}
       }
@@ -221,7 +317,9 @@ async function listChats(){
 }
 async function loadChat(id,li){
   const api = showInternal ? "/chat/history/all" : "/chat/history";
+  startLoading();
   const j=await fetch(`${server}${api}?chat_id=${id}`).then(r=>r.json());
+  stopLoading();
   if(j.response!==200)return;
   chatId=id; fileId=null; clearChat();
   [...$("#chats").children].forEach(x=>x.classList.remove("active"));
@@ -241,18 +339,22 @@ async function sendMsg(){
   if(!text)return; $("#msg").value=""; addMsg(text,"user");
   if(chatId===null){
     const payload={user_id:uid,message_text:text}; if(fileId)payload.file_id=fileId;
+    lockMessageSend();
     const j=await fetch(`${server}/chat/start`,{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify(payload)
     }).then(r=>r.json());
+    unlockMessageSend();
     if(j.response!==200){addMsg("ERROR: "+j.message,"assist");return;}
     chatId=j.data.chat_id; listChats();
     addMsg(j.data.response,"assist",j.data.image_url);
   }else{
+    lockMessageSend();
     const j=await fetch(`${server}/chat/query`,{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({chat_id:chatId,message_text:text})
     }).then(r=>r.json());
+    unlockMessageSend();
     if(j.response!==200){addMsg("ERROR: "+j.message,"assist");return;}
     addMsg(j.data.response,"assist",j.data.image_url);
   }
@@ -271,6 +373,7 @@ function toggleInternal(){
 
 /* ───── 이벤트 바인딩 ───── */
 $("#login-btn").onclick=login;
+$("#logout-btn").onclick = logout;
 $("#refresh-files").onclick=listFiles;
 $("#refresh-chats").onclick=listChats;
 $("#upload-file").onchange=uploadFile;
@@ -279,5 +382,6 @@ $("#send").onclick=sendMsg;
 $("#msg").addEventListener("keyup",e=>{if(e.key==="Enter")sendMsg();});
 $("#toggle-internal").onclick = toggleInternal;
 </script>
+<div id="loading"></div>
 </body>
 </html>
