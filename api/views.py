@@ -50,7 +50,8 @@ for md_file in PROMPT_DIR.glob("*.md"):
     SYSTEM_PROMPTS[md_file.stem] = md_file.read_text(encoding='utf-8')
 
 assert SYSTEM_PROMPTS, "No system prompts found in the prompts directory."
-print(f"[api.views] Loaded {len(SYSTEM_PROMPTS)} system prompts: {', '.join(SYSTEM_PROMPTS.keys())}")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.info(f"[api.views] Loaded {len(SYSTEM_PROMPTS)} system prompts: {', '.join(SYSTEM_PROMPTS.keys())}")
 
 # Create your views here.
 
