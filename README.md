@@ -75,6 +75,11 @@ LLM(Large Language Model)이 텍스트를 SQL 쿼리로 자동 변환하여 SQLi
 
 ---
 
+### API Specification
+API 관련 설명은 [여기](https://github.com/leehe228/Graduate-Project-Server/blob/main/API_SPECIFICATION.md) 또는 본 프로젝트에 `API_SPECIFICATION.md`에서 확인할 수 있습니다.
+
+---
+
 ## 배포 및 실행 방법
 
 아래 단계를 따라 로컬 개발 환경에서 POS-Insight를 실행할 수 있습니다.
