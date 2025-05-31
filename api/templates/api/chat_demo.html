@@ -281,9 +281,9 @@ async function listFiles(){
 }
 async function uploadFile(){
   if(!loggedIn)return alert("로그인 필요");
-  const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0];
+  const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0], cat=$("#biz-type").value;
   if(!file)return;
-  const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file);
+  const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file); fd.append("category",cat);
   startLoading();
   const j=await fetch(`${server}/files/upload`,{method:"POST",body:fd}).then(r=>r.json());
   stopLoading();

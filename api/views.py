@@ -344,12 +344,21 @@ def upload_file(request):
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
         file = request.FILES.get('file')
+        file_category = request.POST.get('category', 'default')
         
         # 값이 비어있다면 400 오류
         if not user_id or not file or user_id == "":
             return JsonResponse({
                 "response": 400,
                 "message": "missing required fields",
+                "data": None
+            })
+            
+        # category가 올바른지 확인
+        if file_category not in ['default', 'cafe', 'cvs']:
+            return JsonResponse({
+                "response": 400,
+                "message": "invalid file category",
                 "data": None
             })
             
@@ -405,6 +414,7 @@ def upload_file(request):
             file_path=file_path,
             file_size=file.size,
             file_type=file_extension,
+            file_business_category=file_category,
         )
         
         # File 객체 저장
