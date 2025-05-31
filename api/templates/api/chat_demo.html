@@ -40,7 +40,7 @@ ul.list li.active{background:var(--selected-bg);
             background:rgba(219, 219, 219, 0);color:#adadad;cursor:pointer}
 ul.list li:hover .delete-btn{display:block}
 
-#upload-wrap{padding:12px;border-top:1px solid var(--sidebar-border)}
+#upload-wrap{padding:12px;border-top:1px solid var(--sidebar-border);display:flex;flex-direction:row;gap:8px}
 
 /* ────────── MAIN ────────── */
 #main{flex:1;display:flex;flex-direction:column}
@@ -94,6 +94,9 @@ ul.list li:hover .delete-btn{display:block}
   animation:spin .8s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+#top input, #top select{padding:6px 8px;border:1px solid #ced4da;border-radius:4px;font-size:.85rem}
+#biz-type{width:100px}
+
 </style>
 </head>
 <body>
@@ -109,7 +112,14 @@ ul.list li:hover .delete-btn{display:block}
   </div>
   <ul id="chats" class="list"></ul>
 
-  <div id="upload-wrap"><input id="upload-file" type="file" style="width:100%"></div>
+  <div id="upload-wrap">
+    <input id="upload-file" type="file" style="width:100%">
+    <select id="biz-type">
+      <option selected value="default">업종 선택</option>
+      <option value="cafe">카페</option>
+      <option value="cvs">편의점</option>
+    </select>
+  </div>
 </div>
 
 <!-- ─────── MAIN ─────── -->
@@ -271,9 +281,9 @@ async function listFiles(){
 }
 async function uploadFile(){
   if(!loggedIn)return alert("로그인 필요");
-  const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0];
+  const uid=$("#user-id").value.trim(), file=$("#upload-file").files[0], cat=$("#biz-type").value;
   if(!file)return;
-  const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file);
+  const fd=new FormData(); fd.append("user_id",uid); fd.append("file",file); fd.append("category",cat);
   startLoading();
   const j=await fetch(`${server}/files/upload`,{method:"POST",body:fd}).then(r=>r.json());
   stopLoading();
