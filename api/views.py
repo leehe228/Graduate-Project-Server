@@ -407,11 +407,13 @@ def list_files(request):
                 "file_id": file.file_id,
                 "file_name": file.file_name,
                 "file_size_kb": file.file_size // 1024,
+                "file_size_b": file.file_size,
                 "file_type": file.file_type,
                 "file_path": file.file_path,
                 "file_processed": file_processed_bool,
                 "file_error": file.file_error,
                 "created_at": file.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "file_business_category": file.file_business_category,
             }
             file_list.append(file_data)
         
