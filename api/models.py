@@ -33,6 +33,7 @@ class File(models.Model):
     file_schema = models.TextField(default="")
     file_processed = models.IntegerField(choices=FileProcessingStatus.choices, default=FileProcessingStatus.PENDING)
     file_error = models.TextField(default="")
+    file_business_category = models.CharField(max_length=32, default="default")
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
