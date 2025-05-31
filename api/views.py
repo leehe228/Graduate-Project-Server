@@ -550,8 +550,16 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
         user_question = f"file의 db schema:\n{target_file.file_schema}\n\n{user_question}"
 
     # 2) 대화 컨텍스트
+    # 선택한 파일 카테고리에 따라 시스템 프롬프트를 결정
+    if target_file is not None:
+        cat = target_file.file_business_category
+    else:
+        cat = "default"
+    
+    system_prompt = SYSTEM_PROMPTS.get(cat, SYSTEM_PROMPTS['default'])
+    
     prev_msgs = [
-        {"role": "system", "content": SYSTEM_PROMPTS['default']},
+        {"role": "system", "content": system_prompt},
         {"role": "user",   "content": user_question}
     ]
 
@@ -568,7 +576,7 @@ def start_chat(request: WSGIRequest) -> JsonResponse:
         print(f"[Chat {chat.chat_id}] === LLM TURN {turn}/{MAX_ITER} ===")
 
         assistant_reply = langchain(model,
-                                    SYSTEM_PROMPTS['default'],
+                                    system_prompt,
                                     prev_msgs[1:],          # system 제외
                                     prev_msgs[-1]["content"])
         print(f"[Chat {chat.chat_id}] LLM raw ↴\n{assistant_reply}\n")
@@ -742,7 +750,15 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
                .exclude(message_role=Message.MessageRole.INTERNAL)
                .order_by("created_at"))
 
-    prev_msgs = [{"role": "system", "content": SYSTEM_PROMPTS['default']}]
+    # 선택한 파일 카테고리에 따라 시스템 프롬프트를 결정
+    if target_file is not None:
+        cat = target_file.file_business_category
+    else:
+        cat = "default"
+        
+    system_prompt = SYSTEM_PROMPTS.get(cat, SYSTEM_PROMPTS['default'])
+    prev_msgs = [{"role": "system", "content": system_prompt}]
+                 
     for m in history:
         role = "assistant" if m.message_role == Message.MessageRole.ASSISTANT else "user"
         prev_msgs.append({"role": role, "content": m.message_text})
@@ -763,7 +779,7 @@ def query_chat(request: WSGIRequest) -> JsonResponse:
         print(f"[Chat {chat.chat_id}] === QUERY TURN {turn}/{MAX_ITER} ===")
 
         assistant_reply = langchain(model,
-                                    SYSTEM_PROMPTS['default'],
+                                    system_prompt,
                                     prev_msgs[1:],         # system 제외
                                     prev_msgs[-1]["content"])
         print(f"[Chat {chat.chat_id}] LLM raw ↴\n{assistant_reply}\n")
