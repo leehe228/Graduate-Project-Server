@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction
 from django.utils import timezone
+import logging
 
 from .utils import file_to_sqlite, execute_sqlite_query, run_pyplot_code
 from .backend import langchain, text2sql, make_title
