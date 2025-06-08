@@ -1,6 +1,6 @@
 # POS-Insight: Conversational POS Data Analyzer
 
-<img width="1595" alt="스크린샷 2025-05-31 18 51 49" src="https://github.com/user-attachments/assets/7b87b9d5-9d06-4de2-b16b-90a5e504e501" />
+<img width="1500px" alt="" src="https://github.com/user-attachments/assets/e3e54a09-a1c6-4627-a530-b7aa58accd92" />
 
 
 ## 프로젝트 소개
