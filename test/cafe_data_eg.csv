@@ -1,0 +1,101 @@
+﻿transaction_id,date,time,channel,item_name,size,temperature,shot_count,milk_type,syrup_pumps,topping,qty,unit_price,total_price,payment_type
+9996023,2025-01-13,0 days 13:27:39,DeliveryApp,Mocha,S,Iced,2,Regular,3,None,1,6252,6252,Cash
+8810981,2025-07-13,0 days 02:52:58,Kiosk,Americano,S,Iced,3,Oat,2,Cheese Cap,1,3542,3542,MobilePay
+7510970,2025-06-11,0 days 13:37:01,DeliveryApp,Smoothie,M,Iced,3,Soy,1,Cheese Cap,1,6125,6125,MobilePay
+8578581,2025-03-02,0 days 01:23:15,Store,Smoothie,M,Hot,3,Oat,3,None,1,5322,5322,Cash
+2437830,2025-10-15,0 days 01:41:24,Kiosk,Cappuccino,S,Iced,3,Oat,1,Cheese Cap,1,3646,3646,MobilePay
+8140137,2025-03-24,0 days 15:14:15,DeliveryApp,Smoothie,S,Hot,2,Low-fat,0,Cheese Cap,1,3663,3663,Card
+7370640,2025-04-04,0 days 06:40:22,Store,Latte,S,Hot,3,Oat,0,Bubble,1,3260,3260,Cash
+5274191,2025-03-05,0 days 23:24:09,Store,Americano,L,Hot,1,Oat,2,Cheese Cap,1,4347,4347,MobilePay
+1935334,2025-10-25,0 days 07:43:24,DeliveryApp,Americano,L,Iced,2,Soy,1,Cheese Cap,1,4764,4764,Card
+7495006,2025-06-26,0 days 06:56:24,DeliveryApp,Americano,L,Hot,3,Soy,1,Bubble,1,6019,6019,MobilePay
+7076948,2025-03-04,0 days 08:32:08,DeliveryApp,Americano,S,Iced,1,Soy,3,Bubble,1,6968,6968,Card
+2125382,2025-07-26,0 days 09:54:24,DeliveryApp,Smoothie,L,Iced,2,Low-fat,0,None,1,3233,3233,Cash
+5096245,2025-01-31,0 days 00:40:05,DeliveryApp,Mocha,L,Iced,2,Regular,2,Whipped Cream,1,4925,4925,Cash
+5964119,2025-10-19,0 days 15:29:34,Store,Smoothie,L,Hot,1,Soy,2,Bubble,1,6471,6471,MobilePay
+9622371,2025-09-19,0 days 08:51:52,DeliveryApp,Tea,M,Hot,2,Oat,2,None,1,5318,5318,Card
+4249812,2025-08-25,0 days 13:17:40,Store,Cappuccino,L,Iced,3,Soy,2,Whipped Cream,1,6572,6572,Cash
+9135421,2025-12-08,0 days 20:35:48,Store,Mocha,L,Hot,3,Oat,0,Cheese Cap,1,4999,4999,Card
+8113112,2025-12-05,0 days 11:48:39,Kiosk,Latte,S,Iced,1,Soy,1,Whipped Cream,1,3126,3126,Card
+8783775,2025-09-30,0 days 03:33:22,DeliveryApp,Mocha,S,Iced,3,Soy,2,Whipped Cream,1,4612,4612,Card
+2577113,2025-12-31,0 days 04:40:35,Kiosk,Mocha,M,Iced,3,Regular,1,Cheese Cap,1,4072,4072,Card
+7605310,2025-07-28,0 days 19:53:15,Store,Latte,M,Iced,1,Soy,3,Whipped Cream,1,6740,6740,Card
+9619138,2025-12-30,0 days 20:36:39,DeliveryApp,Americano,L,Iced,3,Soy,3,None,1,3448,3448,MobilePay
+9130731,2025-06-06,0 days 17:23:00,DeliveryApp,Tea,L,Hot,1,Soy,3,Cheese Cap,1,6087,6087,MobilePay
+4410768,2025-06-10,0 days 17:49:27,Store,Americano,L,Iced,3,Low-fat,2,Bubble,1,4539,4539,MobilePay
+7379787,2025-05-27,0 days 14:33:31,DeliveryApp,Smoothie,L,Hot,1,Oat,3,Bubble,1,6986,6986,Card
+1819725,2025-09-07,0 days 02:06:27,Kiosk,Cappuccino,S,Iced,3,Regular,2,None,1,6863,6863,Cash
+1425672,2025-01-06,0 days 10:09:54,Store,Latte,S,Iced,3,Low-fat,3,Whipped Cream,1,5163,5163,Cash
+5712641,2025-02-22,0 days 18:28:08,DeliveryApp,Smoothie,L,Hot,1,Oat,0,Bubble,1,4939,4939,Card
+3489358,2025-07-11,0 days 16:50:58,Kiosk,Americano,M,Iced,2,Oat,1,None,1,4420,4420,MobilePay
+7429447,2025-01-02,0 days 18:27:42,DeliveryApp,Cappuccino,S,Hot,3,Low-fat,1,Cheese Cap,1,4649,4649,Card
+2734128,2025-12-14,0 days 05:57:48,Kiosk,Americano,S,Iced,3,Regular,1,Cheese Cap,1,6386,6386,Cash
+3278151,2025-04-30,0 days 02:34:50,DeliveryApp,Latte,M,Hot,3,Oat,0,Bubble,1,5872,5872,Card
+3538945,2025-03-20,0 days 03:47:58,Kiosk,Americano,L,Iced,1,Oat,0,Bubble,1,3391,3391,MobilePay
+9334769,2025-04-03,0 days 11:14:22,DeliveryApp,Mocha,L,Hot,2,Oat,1,Cheese Cap,1,3250,3250,MobilePay
+8364284,2025-05-02,0 days 19:49:33,Kiosk,Mocha,L,Iced,1,Soy,2,Cheese Cap,1,3313,3313,MobilePay
+1587533,2025-03-19,0 days 10:49:51,Store,Mocha,S,Iced,3,Regular,1,Bubble,1,5696,5696,MobilePay
+4570912,2025-11-11,0 days 15:00:21,DeliveryApp,Tea,M,Hot,2,Oat,0,None,1,3372,3372,Card
+9411291,2025-07-05,0 days 06:28:13,Kiosk,Cappuccino,S,Iced,1,Soy,3,None,1,3391,3391,MobilePay
+5135747,2025-10-28,0 days 18:53:19,Kiosk,Smoothie,M,Iced,1,Regular,3,Cheese Cap,1,3801,3801,Card
+2784570,2025-06-26,0 days 08:35:12,Store,Americano,L,Hot,2,Regular,1,Cheese Cap,1,6875,6875,MobilePay
+1474021,2025-07-13,0 days 17:26:09,Store,Mocha,M,Hot,1,Soy,2,Cheese Cap,1,3564,3564,Cash
+5847558,2025-07-29,0 days 16:08:27,Kiosk,Mocha,M,Hot,2,Regular,1,Bubble,1,3673,3673,MobilePay
+9603082,2025-03-24,0 days 14:39:07,Kiosk,Latte,S,Hot,2,Oat,2,Cheese Cap,1,3944,3944,MobilePay
+8369350,2025-05-01,0 days 22:51:28,Store,Cappuccino,M,Iced,1,Soy,3,None,1,3098,3098,MobilePay
+1935687,2025-10-28,0 days 17:34:28,DeliveryApp,Tea,S,Hot,1,Low-fat,2,Cheese Cap,1,6601,6601,Card
+6062651,2025-08-02,0 days 03:57:03,Store,Americano,L,Hot,3,Oat,3,Bubble,1,5284,5284,MobilePay
+5794490,2025-10-19,0 days 15:11:58,Kiosk,Smoothie,S,Hot,3,Regular,2,Whipped Cream,1,3212,3212,MobilePay
+3984098,2025-10-06,0 days 05:10:34,Store,Smoothie,S,Hot,3,Oat,1,Whipped Cream,1,4948,4948,MobilePay
+5748817,2025-03-29,0 days 09:54:02,Store,Tea,M,Hot,2,Low-fat,2,Cheese Cap,1,3552,3552,Card
+8451913,2025-08-14,0 days 22:09:40,Store,Americano,M,Hot,3,Oat,0,Bubble,1,4309,4309,Card
+7732729,2025-06-09,0 days 00:54:09,DeliveryApp,Tea,M,Iced,3,Soy,1,None,1,6735,6735,MobilePay
+2619823,2025-12-27,0 days 15:52:33,DeliveryApp,Americano,L,Iced,2,Oat,1,None,1,5431,5431,MobilePay
+8398433,2025-06-03,0 days 09:23:43,Kiosk,Mocha,L,Iced,1,Soy,0,Whipped Cream,1,4902,4902,Card
+7513642,2025-07-30,0 days 09:16:27,Store,Latte,M,Hot,2,Regular,3,Cheese Cap,1,3709,3709,MobilePay
+2947963,2025-07-16,0 days 07:10:08,Store,Mocha,S,Hot,1,Soy,2,Cheese Cap,1,6956,6956,MobilePay
+5648839,2025-11-07,0 days 05:07:25,Kiosk,Cappuccino,M,Iced,2,Low-fat,2,None,1,3943,3943,Card
+1553520,2025-01-18,0 days 06:46:31,Store,Mocha,S,Iced,1,Soy,1,Whipped Cream,1,5189,5189,Card
+7337093,2025-07-22,0 days 00:29:21,Store,Mocha,S,Iced,1,Low-fat,0,Cheese Cap,1,6156,6156,Card
+9218525,2025-11-12,0 days 01:46:41,Kiosk,Latte,M,Iced,2,Soy,3,Cheese Cap,1,6612,6612,Card
+1491346,2025-07-26,0 days 03:20:30,Kiosk,Tea,L,Iced,2,Oat,3,Cheese Cap,1,3977,3977,Cash
+7214979,2025-08-24,0 days 05:00:37,Store,Mocha,L,Hot,3,Low-fat,2,None,1,4204,4204,Card
+7674745,2025-07-25,0 days 13:37:58,Store,Latte,S,Hot,1,Regular,2,Whipped Cream,1,4178,4178,MobilePay
+8930273,2025-03-21,0 days 07:57:31,DeliveryApp,Latte,M,Iced,3,Regular,0,None,1,3601,3601,Card
+9627656,2025-11-21,0 days 21:29:50,DeliveryApp,Smoothie,L,Hot,1,Low-fat,3,Cheese Cap,1,4327,4327,MobilePay
+6647211,2025-10-24,0 days 06:04:12,Store,Americano,L,Hot,2,Soy,0,None,1,5250,5250,MobilePay
+1002263,2025-03-26,0 days 18:52:18,Store,Latte,S,Hot,3,Low-fat,1,Cheese Cap,1,4097,4097,MobilePay
+3372992,2025-11-09,0 days 11:45:20,Store,Cappuccino,L,Hot,1,Regular,1,Cheese Cap,1,4634,4634,Card
+8520777,2025-06-28,0 days 19:11:58,Store,Latte,S,Hot,2,Oat,3,Whipped Cream,1,5570,5570,MobilePay
+5766648,2025-10-01,0 days 02:36:35,DeliveryApp,Smoothie,S,Hot,2,Regular,3,Cheese Cap,1,4961,4961,Cash
+5349826,2025-06-04,0 days 04:29:46,Kiosk,Cappuccino,L,Hot,2,Low-fat,0,Whipped Cream,1,5512,5512,Card
+2379104,2025-05-11,0 days 02:29:42,Store,Americano,L,Iced,3,Oat,0,None,1,4458,4458,MobilePay
+7539749,2025-11-20,0 days 21:23:51,Kiosk,Latte,S,Hot,2,Low-fat,3,None,1,4581,4581,Card
+9040210,2025-09-03,0 days 19:30:44,DeliveryApp,Tea,L,Hot,2,Soy,0,Whipped Cream,1,6117,6117,MobilePay
+2708174,2025-09-10,0 days 20:03:51,Kiosk,Tea,S,Iced,2,Low-fat,3,Whipped Cream,1,6236,6236,Cash
+5522910,2025-06-02,0 days 06:13:03,DeliveryApp,Latte,L,Iced,3,Regular,2,Bubble,1,3064,3064,MobilePay
+6051376,2025-11-21,0 days 09:15:29,Store,Smoothie,L,Iced,2,Regular,1,None,1,4625,4625,MobilePay
+8205011,2025-04-14,0 days 11:01:05,Kiosk,Americano,S,Hot,2,Soy,2,Whipped Cream,1,5192,5192,Card
+9150372,2025-06-27,0 days 02:19:22,Kiosk,Smoothie,L,Iced,1,Regular,3,None,1,3623,3623,MobilePay
+1394554,2025-02-20,0 days 06:22:23,DeliveryApp,Smoothie,M,Hot,1,Low-fat,3,None,1,5379,5379,Cash
+2066456,2025-12-19,0 days 16:56:12,Kiosk,Smoothie,S,Iced,3,Oat,0,None,1,3754,3754,Card
+9766005,2025-11-20,0 days 12:43:27,Store,Americano,L,Iced,1,Soy,2,Cheese Cap,1,3159,3159,Card
+5362240,2025-07-27,0 days 14:06:38,Store,Cappuccino,S,Hot,3,Oat,2,None,1,6381,6381,MobilePay
+5662083,2025-06-06,0 days 09:33:25,Store,Latte,M,Hot,1,Soy,1,Whipped Cream,1,4227,4227,Card
+2580397,2025-04-13,0 days 09:36:17,Kiosk,Americano,M,Iced,2,Soy,1,Bubble,1,6415,6415,Card
+9984169,2025-08-11,0 days 16:16:03,DeliveryApp,Americano,M,Iced,3,Oat,0,Bubble,1,5200,5200,Cash
+3288631,2025-07-23,0 days 16:03:28,Kiosk,Smoothie,S,Hot,1,Low-fat,1,Whipped Cream,1,5094,5094,MobilePay
+2616799,2025-12-20,0 days 10:24:06,DeliveryApp,Smoothie,M,Iced,3,Low-fat,2,Bubble,1,5762,5762,Cash
+5162500,2025-02-11,0 days 15:52:36,Kiosk,Latte,L,Hot,2,Oat,1,None,1,4902,4902,Card
+9045509,2025-04-27,0 days 07:42:25,DeliveryApp,Mocha,S,Hot,1,Regular,0,Whipped Cream,1,5205,5205,Cash
+6351788,2025-06-10,0 days 16:30:33,DeliveryApp,Smoothie,M,Iced,1,Oat,3,Whipped Cream,1,4603,4603,Cash
+3053586,2025-07-02,0 days 12:11:49,Store,Tea,M,Iced,1,Soy,3,Whipped Cream,1,3859,3859,MobilePay
+4408031,2025-12-06,0 days 02:41:55,Kiosk,Mocha,S,Hot,3,Oat,1,None,1,5732,5732,MobilePay
+1028994,2025-11-12,0 days 21:24:31,Store,Americano,S,Iced,1,Soy,0,None,1,5808,5808,MobilePay
+8690486,2025-06-25,0 days 06:26:40,Kiosk,Tea,M,Hot,1,Oat,1,None,1,5315,5315,Card
+1628205,2025-02-07,0 days 19:03:47,DeliveryApp,Latte,S,Iced,3,Soy,0,None,1,5867,5867,Card
+5547800,2025-09-15,0 days 08:43:46,DeliveryApp,Latte,M,Iced,1,Low-fat,3,Cheese Cap,1,4797,4797,Cash
+9272375,2025-11-28,0 days 09:27:19,Kiosk,Americano,M,Hot,1,Regular,1,None,1,6050,6050,Card
+6652149,2025-04-09,0 days 21:08:14,Kiosk,Americano,L,Hot,3,Low-fat,1,Whipped Cream,1,4699,4699,Card
+7983202,2025-12-29,0 days 07:18:15,Kiosk,Mocha,S,Iced,1,Oat,0,Bubble,1,6792,6792,Card
+7467755,2025-08-16,0 days 05:23:42,DeliveryApp,Smoothie,L,Hot,3,Regular,1,Whipped Cream,1,6914,6914,Cash

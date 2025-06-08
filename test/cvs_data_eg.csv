@@ -1,0 +1,101 @@
+﻿transaction_id,date,time,channel,barcode,item_name,category_lv1,brand,pack_size,qty,unit_price,promo_flag,age_restricted,total_price,payment_type
+4267781,2025-11-17,0 days 20:53:15,Counter,8800444420006,Cigarette,Frozen,Nestlé,350 mL,1,4859,0,1,4859,Prepaid
+8490997,2025-12-29,0 days 20:51:02,Self-Checkout,8800863233715,Chips,Alcohol,PepsiCo,1 L,3,4842,0,0,14526,Card
+9027912,2025-10-21,0 days 15:33:43,Self-Checkout,8800063268868,Beer,Cigarette,Lotte,500 mL,2,4615,0,0,9230,Voucher
+9274896,2025-06-11,0 days 18:59:55,Counter,8800201627050,Soda,Frozen,Lotte,120 g,1,2810,0,1,2810,Cash
+6546491,2025-11-28,0 days 00:32:01,Counter,8800501917291,Ice cream,Frozen,Nestlé,350 mL,3,2518,0,0,7554,Prepaid
+7455201,2025-10-02,0 days 01:08:28,Self-Checkout,8800150450709,Energy Drink,Beverage,Lotte,120 g,3,2662,0,1,7986,Voucher
+6097713,2025-12-03,0 days 17:26:59,Counter,8800922485394,Chips,Alcohol,Lotte,60 g,3,2669,0,0,8007,Cash
+9541917,2025-04-27,0 days 13:18:10,Counter,8800178557735,Ice cream,Alcohol,PepsiCo,350 mL,2,1453,0,0,2906,Card
+6701747,2025-02-04,0 days 19:17:27,Self-Checkout,8800329781398,Beer,Beverage,PepsiCo,350 mL,3,4846,0,0,14538,Prepaid
+9527595,2025-07-21,0 days 08:22:20,Self-Checkout,8800910400303,Soda,Cigarette,Lotte,500 mL,1,3465,0,0,3465,Prepaid
+6249248,2025-02-07,0 days 11:38:54,Self-Checkout,8800821892126,Chocolate,Alcohol,Local,1 L,3,2896,0,0,8688,Voucher
+4425350,2025-12-30,0 days 07:55:53,Counter,8800901791272,Ice cream,Daily,Nestlé,60 g,3,2317,0,0,6951,Cash
+9437748,2025-05-21,0 days 19:34:01,Self-Checkout,8800281936742,Energy Drink,Alcohol,Nestlé,1 L,1,2992,0,1,2992,Prepaid
+5759937,2025-01-24,0 days 04:53:41,Counter,8800633215349,Ice cream,Cigarette,Coca-Cola,120 g,2,4958,0,0,9916,Voucher
+4256586,2025-02-11,0 days 02:02:56,Counter,8800138818261,Sandwich,Cigarette,Nestlé,500 mL,2,4277,0,0,8554,Voucher
+7882551,2025-05-08,0 days 08:15:26,Counter,8800498866707,Chocolate,Alcohol,PepsiCo,350 mL,1,4502,0,0,4502,Voucher
+1835678,2025-04-10,0 days 05:10:34,Self-Checkout,8800162992778,Chips,Cigarette,Coca-Cola,120 g,3,3876,0,0,11628,Card
+1433163,2025-02-11,0 days 13:57:55,Self-Checkout,8800232312150,Cigarette,Frozen,Lotte,60 g,2,4397,0,1,8794,Prepaid
+9758488,2025-11-21,0 days 22:28:26,Counter,8800712881563,Chips,Beverage,PepsiCo,350 mL,1,3105,0,1,3105,Cash
+1384128,2025-01-14,0 days 20:05:24,Counter,8800687505773,Cigarette,Beverage,Local,120 g,2,3078,0,0,6156,Voucher
+1050730,2025-05-17,0 days 13:12:19,Self-Checkout,8800138603608,Chips,Daily,Lotte,120 g,3,4730,1,0,14190,Card
+6733191,2025-10-15,0 days 10:59:38,Counter,8800202771280,Chips,Daily,Nestlé,350 mL,1,1169,0,0,1169,Voucher
+1818116,2025-04-20,0 days 16:27:47,Counter,8800543940256,Chocolate,Cigarette,Lotte,500 mL,2,1000,1,0,2000,Prepaid
+4972385,2025-06-21,0 days 21:07:47,Self-Checkout,8800110653353,Ice cream,Cigarette,Nestlé,500 mL,2,1655,0,1,3310,Voucher
+7955137,2025-07-13,0 days 00:03:40,Self-Checkout,8800782071228,Ice cream,Cigarette,PepsiCo,120 g,2,3197,0,0,6394,Voucher
+7587110,2025-10-31,0 days 15:19:26,Self-Checkout,8800421034260,Energy Drink,Snack,PepsiCo,120 g,2,3404,0,1,6808,Cash
+3975093,2025-12-04,0 days 16:29:58,Self-Checkout,8800736186005,Chocolate,Beverage,PepsiCo,60 g,2,3149,0,0,6298,Voucher
+2284506,2025-03-27,0 days 08:29:44,Self-Checkout,8800999345596,Energy Drink,Snack,Nestlé,60 g,1,4424,0,0,4424,Prepaid
+9243141,2025-11-25,0 days 15:00:08,Self-Checkout,8800132340371,Chips,Beverage,Local,1 L,2,3486,1,0,6972,Card
+6365020,2025-07-05,0 days 18:58:28,Self-Checkout,8800375353268,Chocolate,Beverage,Nestlé,60 g,3,3894,0,0,11682,Cash
+9244064,2025-10-04,0 days 04:31:00,Self-Checkout,8800917111311,Chips,Beverage,Coca-Cola,60 g,2,3124,0,0,6248,Cash
+6197775,2025-06-14,0 days 03:21:08,Self-Checkout,8800677561598,Chips,Frozen,Nestlé,1 L,1,4879,0,1,4879,Voucher
+8969393,2025-10-16,0 days 09:20:42,Counter,8800022701936,Soda,Beverage,Nestlé,500 mL,3,4624,1,1,13872,Voucher
+2599630,2025-05-28,0 days 14:42:35,Self-Checkout,8800770586610,Cigarette,Alcohol,Local,120 g,2,1167,1,0,2334,Card
+2570438,2025-08-06,0 days 16:16:37,Counter,8800202824074,Cigarette,Frozen,Coca-Cola,60 g,3,4141,0,0,12423,Card
+5111804,2025-12-14,0 days 00:57:35,Self-Checkout,8800068170239,Beer,Snack,Coca-Cola,1 L,3,3295,0,0,9885,Voucher
+9653014,2025-09-02,0 days 02:03:07,Counter,8800330867759,Cigarette,Cigarette,Nestlé,500 mL,3,2150,0,0,6450,Prepaid
+4156155,2025-10-26,0 days 11:55:43,Counter,8800262245583,Ice cream,Daily,PepsiCo,350 mL,2,2437,0,0,4874,Prepaid
+7408152,2025-01-27,0 days 21:54:08,Self-Checkout,8800835598782,Chips,Frozen,PepsiCo,60 g,3,1648,0,0,4944,Prepaid
+5903174,2025-07-31,0 days 16:20:30,Self-Checkout,8800532428415,Cigarette,Beverage,Nestlé,60 g,1,2933,0,0,2933,Card
+3223855,2025-02-28,0 days 06:10:01,Counter,8800630791621,Chips,Alcohol,Lotte,500 mL,1,4259,0,0,4259,Voucher
+8694473,2025-06-30,0 days 15:45:26,Counter,8800607346186,Beer,Cigarette,PepsiCo,500 mL,1,2605,1,0,2605,Card
+3036063,2025-12-26,0 days 08:28:19,Self-Checkout,8800429734974,Cigarette,Snack,Local,500 mL,2,3256,0,0,6512,Cash
+3678088,2025-03-06,0 days 22:57:19,Self-Checkout,8800969013599,Cigarette,Cigarette,Lotte,1 L,3,1288,0,1,3864,Voucher
+8276869,2025-04-07,0 days 06:23:48,Counter,8800112379697,Sandwich,Beverage,Local,350 mL,3,2552,0,0,7656,Prepaid
+3944390,2025-12-23,0 days 08:15:37,Self-Checkout,8800696797930,Sandwich,Frozen,Coca-Cola,500 mL,3,1403,0,0,4209,Card
+3666080,2025-12-27,0 days 06:03:29,Self-Checkout,8800325737643,Cigarette,Alcohol,Nestlé,1 L,1,4090,0,0,4090,Prepaid
+2695868,2025-08-16,0 days 23:47:26,Self-Checkout,8800421378676,Cigarette,Alcohol,Local,60 g,3,4506,0,0,13518,Cash
+7324771,2025-12-28,0 days 07:27:01,Counter,8800470057923,Sandwich,Frozen,PepsiCo,350 mL,2,1734,1,0,3468,Cash
+4457441,2025-04-04,0 days 00:58:20,Counter,8800024915175,Sandwich,Daily,Lotte,350 mL,3,4127,0,1,12381,Cash
+5080593,2025-06-22,0 days 19:22:49,Self-Checkout,8800344683888,Ice cream,Cigarette,Coca-Cola,120 g,2,4025,0,0,8050,Voucher
+4989816,2025-03-19,0 days 23:18:37,Self-Checkout,8800596707602,Energy Drink,Snack,Coca-Cola,500 mL,2,1157,0,0,2314,Prepaid
+1573565,2025-04-21,0 days 03:04:50,Self-Checkout,8800288938751,Ice cream,Cigarette,PepsiCo,1 L,3,1305,0,1,3915,Prepaid
+2646214,2025-03-27,0 days 15:08:00,Self-Checkout,8800730745722,Beer,Cigarette,Coca-Cola,350 mL,1,4254,0,1,4254,Prepaid
+1304380,2025-10-03,0 days 22:05:12,Counter,8800745244557,Energy Drink,Snack,Lotte,500 mL,2,3911,0,0,7822,Voucher
+2438327,2025-03-02,0 days 14:19:48,Self-Checkout,8800727513000,Chips,Cigarette,Lotte,350 mL,1,1124,0,1,1124,Prepaid
+5102957,2025-12-06,0 days 00:18:59,Self-Checkout,8800029022441,Beer,Alcohol,PepsiCo,500 mL,3,4126,0,0,12378,Cash
+2651279,2025-09-04,0 days 21:31:59,Counter,8800298961371,Ice cream,Snack,Local,350 mL,1,3217,0,1,3217,Card
+1838353,2025-05-04,0 days 19:30:58,Counter,8800379784329,Sandwich,Cigarette,Nestlé,120 g,3,2335,0,0,7005,Cash
+4220531,2025-09-13,0 days 17:35:05,Counter,8800546133611,Ice cream,Beverage,PepsiCo,60 g,3,3895,0,0,11685,Cash
+9563988,2025-05-11,0 days 18:06:57,Self-Checkout,8800060638864,Sandwich,Cigarette,Local,500 mL,1,4418,0,0,4418,Voucher
+7835956,2025-06-09,0 days 14:30:39,Counter,8800140498449,Beer,Daily,Coca-Cola,60 g,2,2250,0,0,4500,Card
+8739764,2025-04-11,0 days 06:12:09,Counter,8800611453988,Cigarette,Frozen,Coca-Cola,1 L,2,4909,0,0,9818,Cash
+8494536,2025-06-25,0 days 02:15:42,Counter,8800488376454,Chocolate,Cigarette,PepsiCo,1 L,3,3409,0,1,10227,Card
+5226662,2025-10-14,0 days 08:04:02,Counter,8800066448760,Chocolate,Cigarette,Local,60 g,3,3737,1,1,11211,Prepaid
+2695901,2025-06-03,0 days 10:35:46,Self-Checkout,8800788486794,Ice cream,Daily,Lotte,350 mL,3,2128,1,0,6384,Card
+2868163,2025-05-06,0 days 15:49:02,Counter,8800347201005,Cigarette,Daily,Local,500 mL,1,2756,0,0,2756,Voucher
+2412913,2025-05-15,0 days 11:18:35,Counter,8800569942474,Soda,Cigarette,Coca-Cola,500 mL,2,4980,0,0,9960,Card
+6335267,2025-11-13,0 days 19:07:41,Counter,8800116014567,Soda,Frozen,Nestlé,60 g,3,4673,0,0,14019,Cash
+8161666,2025-09-25,0 days 02:18:55,Self-Checkout,8800391909296,Ice cream,Cigarette,Coca-Cola,120 g,1,4984,0,1,4984,Prepaid
+9837618,2025-05-09,0 days 21:23:16,Counter,8800652973341,Cigarette,Frozen,Nestlé,120 g,2,1092,0,0,2184,Voucher
+4538078,2025-10-06,0 days 08:00:37,Self-Checkout,8800001667100,Soda,Beverage,Coca-Cola,350 mL,3,2095,1,1,6285,Voucher
+7139643,2025-03-31,0 days 13:59:57,Counter,8800018601199,Soda,Frozen,Local,60 g,1,2340,0,0,2340,Cash
+8188747,2025-09-15,0 days 09:01:13,Counter,8800716301130,Soda,Daily,Lotte,120 g,2,3366,0,1,6732,Prepaid
+6315220,2025-01-01,0 days 12:24:07,Self-Checkout,8800595365266,Cigarette,Snack,Lotte,120 g,2,2723,0,0,5446,Voucher
+2182202,2025-11-26,0 days 11:44:09,Self-Checkout,8800257439460,Chocolate,Snack,Nestlé,1 L,1,4542,0,0,4542,Voucher
+3975176,2025-06-30,0 days 10:53:55,Self-Checkout,8800692507866,Ice cream,Snack,PepsiCo,350 mL,3,3015,0,0,9045,Card
+5874179,2025-02-22,0 days 22:11:25,Self-Checkout,8800714417538,Chocolate,Alcohol,Local,120 g,1,1644,1,1,1644,Voucher
+8738904,2025-01-07,0 days 03:30:40,Counter,8800598353811,Chips,Snack,Local,60 g,3,1009,0,0,3027,Voucher
+2737223,2025-04-02,0 days 23:56:07,Counter,8800759069972,Ice cream,Beverage,Local,1 L,1,4614,0,1,4614,Cash
+3900656,2025-05-05,0 days 10:53:19,Counter,8800296991066,Energy Drink,Frozen,Lotte,350 mL,1,2065,0,0,2065,Card
+2194486,2025-05-04,0 days 00:28:01,Self-Checkout,8800897431303,Sandwich,Frozen,Coca-Cola,1 L,1,2512,0,0,2512,Cash
+7295487,2025-01-04,0 days 21:09:24,Self-Checkout,8800945867137,Cigarette,Alcohol,Coca-Cola,1 L,2,2589,0,0,5178,Prepaid
+7017362,2025-04-04,0 days 20:40:27,Self-Checkout,8800624290594,Cigarette,Snack,Nestlé,1 L,1,3851,1,0,3851,Voucher
+8767665,2025-02-02,0 days 09:55:23,Self-Checkout,8800535743113,Sandwich,Daily,Lotte,120 g,3,3595,0,1,10785,Cash
+1286333,2025-04-07,0 days 08:07:04,Counter,8800192875551,Chips,Alcohol,PepsiCo,500 mL,1,2551,1,0,2551,Card
+3196231,2025-02-05,0 days 18:30:55,Self-Checkout,8800030781544,Ice cream,Beverage,Lotte,350 mL,3,2816,0,0,8448,Voucher
+5804106,2025-09-01,0 days 08:46:54,Self-Checkout,8800256640117,Beer,Daily,Lotte,1 L,3,2006,0,0,6018,Prepaid
+9093883,2025-01-07,0 days 21:50:30,Self-Checkout,8800884262025,Sandwich,Beverage,Nestlé,120 g,2,2886,0,1,5772,Cash
+8374396,2025-11-23,0 days 00:53:05,Self-Checkout,8800145246370,Ice cream,Beverage,Coca-Cola,1 L,1,3691,1,0,3691,Prepaid
+6251177,2025-11-24,0 days 09:34:30,Counter,8800344063944,Energy Drink,Alcohol,Local,120 g,3,1600,0,1,4800,Card
+6098939,2025-04-08,0 days 21:01:56,Counter,8800126592975,Beer,Cigarette,Local,60 g,3,1020,1,1,3060,Prepaid
+1348294,2025-07-01,0 days 20:34:55,Counter,8800333369893,Sandwich,Cigarette,Nestlé,500 mL,3,4250,0,0,12750,Voucher
+1489731,2025-06-06,0 days 18:25:08,Counter,8800590609915,Chips,Beverage,Lotte,500 mL,2,3877,0,0,7754,Prepaid
+7747098,2025-01-09,0 days 10:36:09,Counter,8800788554180,Cigarette,Daily,Coca-Cola,500 mL,1,1154,0,0,1154,Voucher
+6689961,2025-11-23,0 days 00:18:17,Counter,8800575590157,Energy Drink,Alcohol,Local,120 g,3,1283,0,1,3849,Card
+5728347,2025-02-21,0 days 09:59:50,Counter,8800218717095,Chocolate,Alcohol,Coca-Cola,60 g,2,4001,0,0,8002,Prepaid
+5592799,2025-06-30,0 days 12:27:01,Self-Checkout,8800705552219,Chips,Daily,Local,350 mL,2,3862,0,1,7724,Prepaid
+2826567,2025-06-27,0 days 05:44:54,Counter,8800556848317,Cigarette,Cigarette,Local,500 mL,3,3613,0,1,10839,Prepaid
+1768522,2025-05-24,0 days 05:32:18,Self-Checkout,8800320179626,Beer,Beverage,Coca-Cola,120 g,2,4191,0,1,8382,Prepaid

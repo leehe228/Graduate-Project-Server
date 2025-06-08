@@ -257,8 +257,15 @@ async function listFiles(){
   const ul=$("#files"); ul.innerHTML="";
   j.data.forEach(f=>{
     const li=document.createElement("li");
-    li.innerHTML=`<div class="item-title">${f.file_name}</div>
-                  <div class="item-sub">File ID: ${f.file_id} · ${f.file_size_kb}KB · 처리 상태: ${f.file_processed ? "완료" : "실패"}</div>
+    li.innerHTML=`<div class="item-title">${f.file_name} (${
+            f.file_business_category === "cvs" ? "편의점" :
+            f.file_business_category === "cafe" ? "카페" :
+            f.file_business_category === "default" ? "기본" :
+            f.file_business_category
+            })</div>
+            <div class="item-sub">File ID: ${f.file_id} · ${
+              f.file_size_kb === 0 ? `${(Math.round(f.file_size_b / 10) / 100).toFixed(2)}KB` : `${f.file_size_kb}KB`
+            } · 처리 상태: ${f.file_processed ? "완료" : "실패"}</div>
                   <div class="delete-btn">×</div>`;
     /* 선택 */
     li.onclick=e=>{
